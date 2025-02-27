@@ -1,8 +1,7 @@
 package com.cars24.slack_hrbp.controller;
 
-import com.cars24.slack_hrbp.service.AttendanceService;
+import com.cars24.slack_hrbp.service.impl.AttendanceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,7 @@ import java.util.Map;
 public class AttendanceController {
 
     @Autowired
-    private AttendanceService attendanceService;
+    private AttendanceServiceImpl attendanceService;
 
     @PreAuthorize("hasrole('HR')")
     @GetMapping("/generate-report")

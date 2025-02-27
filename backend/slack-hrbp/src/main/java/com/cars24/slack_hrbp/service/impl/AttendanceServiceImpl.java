@@ -1,4 +1,4 @@
-package com.cars24.slack_hrbp.service;
+package com.cars24.slack_hrbp.service.impl;
 
 import com.cars24.slack_hrbp.data.entity.Attendance;
 import com.cars24.slack_hrbp.data.repository.AttendanceRepository;
@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-public class AttendanceService {
+public class AttendanceServiceImpl {
 
     @Autowired
     private AttendanceRepository attendanceRepository;
