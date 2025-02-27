@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@Document(collection = "users")  // MongoDB collection annotation
+@Document(collection = "Employees")  // MongoDB collection annotation
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
