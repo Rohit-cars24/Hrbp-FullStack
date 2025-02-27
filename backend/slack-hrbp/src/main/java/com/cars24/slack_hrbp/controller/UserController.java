@@ -2,7 +2,7 @@ package com.cars24.slack_hrbp.controller;
 
 import com.cars24.slack_hrbp.data.dto.UserDto;
 import com.cars24.slack_hrbp.data.request.SignUpRequest;
-import com.cars24.slack_hrbp.data.request.UserUpdateRequest;
+import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
 import com.cars24.slack_hrbp.data.response.GetUserResponse;
 import com.cars24.slack_hrbp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -60,11 +60,11 @@ public class UserController {
 
 
     @PutMapping("/edit/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable("id") String id, @RequestBody UserUpdateRequest userUpdateRequest){
+    public ResponseEntity<UserDto> updateUser(@PathVariable("id") String id, @RequestBody EmployeeUpdateRequest employeeUpdateRequest){
 
         UserDto userDto = new UserDto();
-        System.out.println(userUpdateRequest);
-        UserDto updatedUser = userService.updateUser(id, userUpdateRequest);
+        System.out.println(employeeUpdateRequest);
+        UserDto updatedUser = userService.updateUser(id, employeeUpdateRequest);
 
         return ResponseEntity.ok().body(updatedUser);
     }

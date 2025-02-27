@@ -1,6 +1,6 @@
 package com.cars24.slack_hrbp.data.repository;
 
-import com.cars24.slack_hrbp.data.entity.UserEntity;
+import com.cars24.slack_hrbp.data.entity.EmployeeEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -8,17 +8,17 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends MongoRepository<UserEntity, String>, PagingAndSortingRepository<UserEntity, String> {
+public interface EmployeeRepository extends MongoRepository<EmployeeEntity, String>, PagingAndSortingRepository<EmployeeEntity, String> {
 
     boolean existsByEmail(String email);
 
-    UserEntity findByEmail(String email);
+    EmployeeEntity findByEmail(String email);
 
-    UserEntity findByUserId(String id);
+    EmployeeEntity findByUserId(String id);
 
     boolean existsByUserId(String id);
 
     void deleteByUserId(String id);
 
-    Page<UserEntity> findAll(Pageable pageable);
+    Page<EmployeeEntity> findAll(Pageable pageable);
 }

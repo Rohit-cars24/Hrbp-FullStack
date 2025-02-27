@@ -2,9 +2,9 @@ package com.cars24.slack_hrbp.service.impl;
 
 import com.cars24.slack_hrbp.data.dao.UserDao;
 import com.cars24.slack_hrbp.data.dto.UserDto;
-import com.cars24.slack_hrbp.data.entity.UserEntity;
-import com.cars24.slack_hrbp.data.repository.UserRepository;
-import com.cars24.slack_hrbp.data.request.UserUpdateRequest;
+import com.cars24.slack_hrbp.data.entity.EmployeeEntity;
+import com.cars24.slack_hrbp.data.repository.EmployeeRepository;
+import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
 import com.cars24.slack_hrbp.excpetion.UserServiceException;
 import com.cars24.slack_hrbp.service.UserService;
 import com.cars24.slack_hrbp.util.Utils;
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     Utils utils;
 
     @Autowired
-    UserRepository userRepository;
+    EmployeeRepository employeeRepository;
 
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -51,33 +51,33 @@ public class UserServiceImpl implements UserService {
             throw new UserServiceException("Empty fields are not allowed");
 
         // Check if the email already exists in the system
-        if (userRepository.existsByEmail(user.getEmail()))
+        if (employeeRepository.existsByEmail(user.getEmail()))
             throw new UserServiceException("Record already exists");
 
-        // Create a new UserEntity object
-        UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(user, userEntity);
+        // Create a new EmployeeEntity object
+        EmployeeEntity employeeEntity = new EmployeeEntity();
+        BeanUtils.copyProperties(user, employeeEntity);
 
         // Generate a unique user ID
-        userEntity.setUserId(utils.generateUserId(10));
+        employeeEntity.setUserId(utils.generateUserId(10));
 
         // Hash the password before storing it
-        userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        employeeEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
         // Assign roles (default to "CUSTOMER" if no roles are provided)
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
             // Default role is ROLE_CUSTOMER if no roles are provided
-            userEntity.setRoles(List.of("ROLE_CUSTOMER"));
+            employeeEntity.setRoles(List.of("ROLE_CUSTOMER"));
         } else {
             // Ensure roles are prefixed with "ROLE_" if not already
             List<String> formattedRoles = user.getRoles().stream()
                     .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)  // Add ROLE_ prefix if not present
                     .collect(Collectors.toList());
-            userEntity.setRoles(formattedRoles);  // Set the formatted roles
+            employeeEntity.setRoles(formattedRoles);  // Set the formatted roles
         }
 
         // Save the user entity
-        UserEntity savedUser = userRepository.save(userEntity);
+        EmployeeEntity savedUser = employeeRepository.save(employeeEntity);
 
         // Convert saved entity back to DTO to return the response
         UserDto signUpResponse = new UserDto();
@@ -92,30 +92,30 @@ public class UserServiceImpl implements UserService {
         log.info("[loadUserByUsername] UserServiceImpl {} ", username);
 
         // Find the user entity by email (which is the username)
-        UserEntity userEntity = userRepository.findByEmail(username);
+        EmployeeEntity employeeEntity = employeeRepository.findByEmail(username);
 
         // If no user is found, throw an exception
-        if (userEntity == null)
+        if (employeeEntity == null)
             throw new UserServiceException("User hasn't signed up");
 
         // Convert roles to Spring Security authorities
-        List<GrantedAuthority> authorities = userEntity.getRoles().stream()
+        List<GrantedAuthority> authorities = employeeEntity.getRoles().stream()
                 .map(role -> role.startsWith("ROLE_") ? new SimpleGrantedAuthority(role) : new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toList());
 
         // Return a new User object with the username, password, and authorities (roles)
-        return new User(username, userEntity.getEncryptedPassword(), authorities);
+        return new User(username, employeeEntity.getEncryptedPassword(), authorities);
     }
 
     public UserDto getUser(String email){
 
         UserDto response = new UserDto();
-        UserEntity userEntity = userRepository.findByEmail(email);
+        EmployeeEntity employeeEntity = employeeRepository.findByEmail(email);
 
-        if(userEntity == null)
+        if(employeeEntity == null)
             throw new UserServiceException("No entry by the given user id");
 
-        BeanUtils.copyProperties(userEntity, response);
+        BeanUtils.copyProperties(employeeEntity, response);
         return response;
     }
 
@@ -127,19 +127,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(String id, UserUpdateRequest userUpdateRequest) {
-        if(!userRepository.existsByUserId(id)){
+    public UserDto updateUser(String id, EmployeeUpdateRequest employeeUpdateRequest) {
+        if(!employeeRepository.existsByUserId(id)){
             throw new UserServiceException("User not found");
         }
 
-        return userDao.updateUser(id, userUpdateRequest);
+        return userDao.updateUser(id, employeeUpdateRequest);
 
     }
 
     @Override
     public UserDto deleteUser(String id) {
 
-        if(!userRepository.existsByUserId(id)){
+        if(!employeeRepository.existsByUserId(id)){
             throw new UserServiceException("User not found");
         }
 
@@ -156,10 +156,10 @@ public class UserServiceImpl implements UserService {
 
         List<UserDto> users = new ArrayList<>();
 
-        Page<UserEntity> userPage = userRepository.findAll(pageable);
-        List<UserEntity> response = userPage.getContent();
+        Page<EmployeeEntity> userPage = employeeRepository.findAll(pageable);
+        List<EmployeeEntity> response = userPage.getContent();
 
-        for(UserEntity res : response){
+        for(EmployeeEntity res : response){
             UserDto user = new UserDto();
             BeanUtils.copyProperties(res, user);
             users.add(user);

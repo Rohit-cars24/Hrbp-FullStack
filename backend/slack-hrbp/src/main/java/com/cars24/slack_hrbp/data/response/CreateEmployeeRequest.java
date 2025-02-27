@@ -3,7 +3,7 @@ package com.cars24.slack_hrbp.data.response;
 import lombok.Data;
 
 @Data
-public class CreateUserRequest {
+public class CreateEmployeeRequest {
     private String userId;
     private String userName;
     private String password;
