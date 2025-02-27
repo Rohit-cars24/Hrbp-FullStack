@@ -45,16 +45,14 @@ public class WebSecurity {
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
                 .authorizeHttpRequests(authz -> authz
-                        // ✅ Allow signup endpoint without authentication
                         .requestMatchers(HttpMethod.POST, "/users/signup").permitAll()
 
-                        // ✅ Allow login endpoint without authentication
                         .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
 
-                        // Restrict HR endpoints
+                        .requestMatchers("/employee/**").hasAuthority("ROLE_EMPLOYEE")
+
                         .requestMatchers("/hr/**").hasAuthority("ROLE_HR")
 
-                        // All other requests must be authenticated
                         .anyRequest().authenticated()
                 )
                 .authenticationManager(authenticationManager)

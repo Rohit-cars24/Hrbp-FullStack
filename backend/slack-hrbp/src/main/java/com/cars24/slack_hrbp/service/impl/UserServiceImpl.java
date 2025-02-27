@@ -46,30 +46,22 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto user) {
         log.info("[createUser] UserServiceImpl {}", user);
 
-        // Validate required fields are provided
         if (user.getFirstName() == null || user.getLastName() == null || user.getEmail() == null || user.getPassword() == null)
             throw new UserServiceException("Empty fields are not allowed");
 
-        // Check if the email already exists in the system
         if (employeeRepository.existsByEmail(user.getEmail()))
             throw new UserServiceException("Record already exists");
 
-        // Create a new EmployeeEntity object
         EmployeeEntity employeeEntity = new EmployeeEntity();
         BeanUtils.copyProperties(user, employeeEntity);
 
-        // Generate a unique user ID
         employeeEntity.setUserId(utils.generateUserId(10));
 
-        // Hash the password before storing it
         employeeEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
-        // Assign roles (default to "CUSTOMER" if no roles are provided)
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            // Default role is ROLE_CUSTOMER if no roles are provided
-            employeeEntity.setRoles(List.of("ROLE_CUSTOMER"));
+            employeeEntity.setRoles(List.of("ROLE_EMPLOYEE"));
         } else {
-            // Ensure roles are prefixed with "ROLE_" if not already
             List<String> formattedRoles = user.getRoles().stream()
                     .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)  // Add ROLE_ prefix if not present
                     .collect(Collectors.toList());
