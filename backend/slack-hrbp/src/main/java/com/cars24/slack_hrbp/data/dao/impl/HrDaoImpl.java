@@ -3,6 +3,7 @@ package com.cars24.slack_hrbp.data.dao.impl;
 import com.cars24.slack_hrbp.data.dao.HrDao;
 import com.cars24.slack_hrbp.data.entity.UserEntity;
 import com.cars24.slack_hrbp.data.repository.UserRepository;
+import com.cars24.slack_hrbp.data.request.UserUpdateRequest;
 import com.cars24.slack_hrbp.data.response.CreateUserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -21,5 +22,14 @@ public class HrDaoImpl implements HrDao {
         BeanUtils.copyProperties(createUserRequest, userEntity);
         userRepository.save(userEntity);
         return "Creation of employee account was successful";
+    }
+
+    @Override
+    public String updateUser(UserUpdateRequest userUpdateRequest) {
+        UserEntity userEntity = userRepository.findByUserId(userUpdateRequest.getUserid());
+        userEntity.setManagerId(userUpdateRequest.getManagerid());
+        userEntity.setManagerName(userUpdateRequest.getManagername());
+        userRepository.save(userEntity);
+        return "Update was successful";
     }
 }

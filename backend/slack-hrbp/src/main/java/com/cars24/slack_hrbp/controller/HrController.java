@@ -36,7 +36,8 @@ public class HrController {
     @PreAuthorize("asRole('HR')")
     @PutMapping("/update")
     public ResponseEntity<String> updateUser(@RequestBody UserUpdateRequest userUpdateRequest){
-
+        String response = hrService.updateUser(userUpdateRequest);
+        return ResponseEntity.ok().body(response);
     }
 
 }
