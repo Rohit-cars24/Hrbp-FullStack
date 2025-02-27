@@ -1,4 +1,5 @@
 package com.cars24.slack_hrbp.security;
+
 import com.cars24.slack_hrbp.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,16 +45,14 @@ public class WebSecurity {
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
                 .authorizeHttpRequests(authz -> authz
-                        // Public endpoints
-                        .requestMatchers(HttpMethod.POST, SecurityConstants.SIGN_UP_URL).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/product/**").permitAll()
+                        // ✅ Allow signup endpoint without authentication
+                        .requestMatchers(HttpMethod.POST, "/users/signup").permitAll()
 
-//                        // Admin-only endpoints
-//                        .requestMatchers(HttpMethod.POST, "/product/**").hasRole("ADMIN")
-//                        .requestMatchers(HttpMethod.PUT, "/product/**").hasRole("ADMIN")
-//                        .requestMatchers(HttpMethod.DELETE, "/product/**").hasRole("ADMIN")
+                        // ✅ Allow login endpoint without authentication
+                        .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
 
-                        .requestMatchers("/feedback/**").authenticated()
+                        // Restrict HR endpoints
+                        .requestMatchers("/hr/**").hasAuthority("ROLE_HR")
 
                         // All other requests must be authenticated
                         .anyRequest().authenticated()

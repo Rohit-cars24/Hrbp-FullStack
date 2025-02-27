@@ -1,6 +1,5 @@
 package com.cars24.slack_hrbp.controller;
 
-
 import com.cars24.slack_hrbp.data.dto.UserDto;
 import com.cars24.slack_hrbp.data.request.SignUpRequest;
 import com.cars24.slack_hrbp.data.request.UserUpdateRequest;

@@ -44,23 +44,6 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        // Log authentication details
-//        System.out.println("Authentication: " + SecurityContextHolder.getContext().getAuthentication());
-
-        // Check if the user is trying to access restricted endpoints
-        if (authentication != null) {
-            String requestURI = req.getRequestURI();
-
-            // Check if the user has the necessary roles for restricted endpoints
-//            if (requestURI.contains("/products") && !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-//                // Log for debugging
-//                System.out.println("Access denied for user with roles: " + authentication.getAuthorities());
-//
-//                // Throwing custom exception for unauthorized access
-//                throw new AuthorizationDeniedException("Access Denied: You do not have the necessary permissions.");
-//            }
-        }
-
         chain.doFilter(req, res);
 
     }
