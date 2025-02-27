@@ -3,7 +3,8 @@ package com.cars24.slack_hrbp.data.dao;
 import com.cars24.slack_hrbp.data.entity.AttendanceEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UsernameDao {
-    public List<AttendanceEntity> getUserDetails(String userid);
+    public Map<String, Map<String, String>> getUserDetails(String userid);
 }

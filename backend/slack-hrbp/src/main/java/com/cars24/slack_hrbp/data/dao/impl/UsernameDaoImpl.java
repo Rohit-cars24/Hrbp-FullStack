@@ -5,10 +5,11 @@ import com.cars24.slack_hrbp.data.entity.AttendanceEntity;
 import com.cars24.slack_hrbp.data.repository.UsernameRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -18,15 +19,57 @@ public class UsernameDaoImpl implements UsernameDao {
     private final UsernameRepository usernameRepository;
 
     @Override
-    public List<AttendanceEntity> getUserDetails(String userid) {
+    public Map<String, Map<String, String>> getUserDetails(String userid) {
+        log.info("Fetching attendance details for userid: {}", userid);
 
-        log.info("{}", userid);
-        List<AttendanceEntity> resp=usernameRepository.findByUserid(userid);
-
-        for (AttendanceEntity entity : resp) {
-            log.info("User Attendance Details: {}", entity);
+        List<AttendanceEntity> resp = usernameRepository.findByUserid(userid);
+        if (resp.isEmpty()) {
+            return Collections.emptyMap(); // Return an empty map if no data found
         }
 
-        return resp;
+        // Extract username from the first record
+        String username = resp.get(0).getUsername();
+        Map<String, String> attendanceMap = new LinkedHashMap<>();
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd"); // Input format
+        SimpleDateFormat outputFormat = new SimpleDateFormat("MMM-dd"); // Output format (Feb-21)
+
+        for (AttendanceEntity entity : resp) {
+            String formattedDate = "";
+
+            try {
+                Date parsedDate = inputFormat.parse(entity.getDate()); // Convert String to Date
+                formattedDate = outputFormat.format(parsedDate); // Format Date to "MMM-dd"
+            } catch (ParseException e) {
+                log.error("Error parsing date: {}", entity.getDate(), e);
+                continue; // Skip this entry if date parsing fails
+            }
+
+            String leaveType = getLeaveAbbreviation(entity.getType());
+            attendanceMap.put(formattedDate, leaveType);
+        }
+
+        // Construct final response map
+        Map<String, Map<String, String>> result = new LinkedHashMap<>();
+        result.put(username, attendanceMap);
+        return result;
+    }
+
+    private String getLeaveAbbreviation(String leaveType) {
+        return switch (leaveType) {
+            case "Planned Leave" -> "P";
+            case "Unplanned Leave" -> "U";
+            case "Planned Leave (Second Half)" -> "P*";
+            case "Sick Leave" -> "S";
+            case "WFH" -> "W";
+            case "Work From Home" -> "W";
+            case "Travelling to HQ" -> "T";
+            case "Holiday" -> "H";
+            case "Elections" -> "E";
+            case "Joined" -> "J";
+            case "Planned Leave (First Half)" -> "P**";
+            default -> "?";
+        };
+
     }
 }
