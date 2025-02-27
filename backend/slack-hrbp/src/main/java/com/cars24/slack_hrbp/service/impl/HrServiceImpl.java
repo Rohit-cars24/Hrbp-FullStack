@@ -3,10 +3,13 @@ package com.cars24.slack_hrbp.service.impl;
 import com.cars24.slack_hrbp.data.dao.impl.HrDaoImpl;
 import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
 import com.cars24.slack_hrbp.data.response.CreateEmployeeRequest;
+import com.cars24.slack_hrbp.data.response.EmployeeDisplayResponse;
 import com.cars24.slack_hrbp.service.HrService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -25,5 +28,10 @@ public class HrServiceImpl implements HrService {
     @Override
     public String updateUser(EmployeeUpdateRequest employeeUpdateRequest) {
         return hrDao.updateUser(employeeUpdateRequest);
+    }
+
+    @Override
+    public List<EmployeeDisplayResponse> getAllUsers() {
+        return hrDao.getAllUsers();
     }
 }

@@ -35,8 +35,8 @@ public class EmployeeEntity implements Serializable {
     @Indexed(unique = true)
     private String email;
 
-    @NotNull(message = "Password cannot be empty")
-    private String password;
+//    @NotNull(message = "Password cannot be empty")
+//    private String password;
 
     private String encryptedPassword;
 

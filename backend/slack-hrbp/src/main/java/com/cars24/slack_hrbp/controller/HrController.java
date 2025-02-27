@@ -2,12 +2,15 @@ package com.cars24.slack_hrbp.controller;
 
 import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
 import com.cars24.slack_hrbp.data.response.CreateEmployeeRequest;
+import com.cars24.slack_hrbp.data.response.EmployeeDisplayResponse;
 import com.cars24.slack_hrbp.service.impl.HrServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -36,6 +39,13 @@ public class HrController {
     @PutMapping("/update")
     public ResponseEntity<String> updateUser(@RequestBody EmployeeUpdateRequest employeeUpdateRequest){
         String response = hrService.updateUser(employeeUpdateRequest);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PreAuthorize("asRole('HR')")
+    @GetMapping("/allUsers")
+    public ResponseEntity<List<EmployeeDisplayResponse>> displayAllUser(){
+        List<EmployeeDisplayResponse> response = hrService.getAllUsers();
         return ResponseEntity.ok().body(response);
     }
 

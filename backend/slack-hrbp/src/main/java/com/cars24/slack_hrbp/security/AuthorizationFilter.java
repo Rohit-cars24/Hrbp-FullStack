@@ -68,7 +68,6 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 
         Claims claims = parser.parseSignedClaims(token).getPayload();
 
-        // Extract username and roles from JWT
         String username = claims.getSubject();
         List<String> roles = claims.get("roles", List.class);
 
