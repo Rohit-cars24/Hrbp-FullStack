@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 
-public class UserUpdateRequest {
+public class EmployeeUpdateRequest {
     String userid;
     String managerid;
     String managername;

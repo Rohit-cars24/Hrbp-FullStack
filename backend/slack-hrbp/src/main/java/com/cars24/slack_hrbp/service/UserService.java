@@ -1,7 +1,7 @@
 package com.cars24.slack_hrbp.service;
 
 import com.cars24.slack_hrbp.data.dto.UserDto;
-import com.cars24.slack_hrbp.data.request.UserUpdateRequest;
+import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -11,7 +11,7 @@ public interface UserService extends UserDetailsService {
     public UserDto getUser(String email);
     public UserDto displayCustomer(String userId);
 
-    UserDto updateUser(String id, UserUpdateRequest userUpdateRequest);
+    UserDto updateUser(String id, EmployeeUpdateRequest employeeUpdateRequest);
 
     UserDto deleteUser(String id);
 

@@ -12,11 +12,10 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Document(collection = "Employees")  // MongoDB collection annotation
-public class UserEntity implements Serializable {
+public class EmployeeEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

@@ -3,9 +3,9 @@ package com.cars24.slack_hrbp.data.dao.impl;
 
 import com.cars24.slack_hrbp.data.dao.UserDao;
 import com.cars24.slack_hrbp.data.dto.UserDto;
-import com.cars24.slack_hrbp.data.entity.UserEntity;
-import com.cars24.slack_hrbp.data.repository.UserRepository;
-import com.cars24.slack_hrbp.data.request.UserUpdateRequest;
+import com.cars24.slack_hrbp.data.entity.EmployeeEntity;
+import com.cars24.slack_hrbp.data.repository.EmployeeRepository;
+import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
 import com.cars24.slack_hrbp.util.Utils;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -19,20 +19,20 @@ import org.springframework.stereotype.Service;
 public class UserDaoImpl implements UserDao {
 
     @Autowired
-    UserRepository userRepository;
+    EmployeeRepository employeeRepository;
 
     @Autowired
     Utils utils;
 
     @Override
-    public UserDto createUser(UserEntity userEntity) {
+    public UserDto createUser(EmployeeEntity employeeEntity) {
 
-        log.info("[createUser] UserDaoImpl{}", userEntity);
+        log.info("[createUser] UserDaoImpl{}", employeeEntity);
 
-        UserEntity response = userRepository.save(userEntity);
+        EmployeeEntity response = employeeRepository.save(employeeEntity);
 
         UserDto signUpResponse = new UserDto();
-        BeanUtils.copyProperties(userEntity, signUpResponse);
+        BeanUtils.copyProperties(employeeEntity, signUpResponse);
 
         return signUpResponse;
 
@@ -44,35 +44,35 @@ public class UserDaoImpl implements UserDao {
         log.info("[displayCustomer] UserDaoImpl {}", id);
 
         UserDto userDto = new UserDto();
-        UserEntity userEntity = userRepository.findByUserId(id);
-        BeanUtils.copyProperties(userEntity, userDto);
+        EmployeeEntity employeeEntity = employeeRepository.findByUserId(id);
+        BeanUtils.copyProperties(employeeEntity, userDto);
         return userDto;
     }
 
     @Override
-    public UserDto updateUser(String id, UserUpdateRequest userUpdateRequest) {
+    public UserDto updateUser(String id, EmployeeUpdateRequest employeeUpdateRequest) {
 
-        log.info("[displayCustomer] UserDaoImpl id, {}, request, {}", id, userUpdateRequest);
+        log.info("[displayCustomer] UserDaoImpl id, {}, request, {}", id, employeeUpdateRequest);
 
-        UserEntity userEntity = userRepository.findByUserId(id);
+        EmployeeEntity employeeEntity = employeeRepository.findByUserId(id);
 
-//        if(userUpdateRequest.getFirstName().length() != 0)
-//            userEntity.setFirstName(userUpdateRequest.getFirstName());
+//        if(employeeUpdateRequest.getFirstName().length() != 0)
+//            employeeEntity.setFirstName(employeeUpdateRequest.getFirstName());
 //
-//        if(userUpdateRequest.getLastName().length() != 0)
-//            userEntity.setLastName(userUpdateRequest.getLastName());
+//        if(employeeUpdateRequest.getLastName().length() != 0)
+//            employeeEntity.setLastName(employeeUpdateRequest.getLastName());
 //
-//        if(userUpdateRequest.getPhone().length() != 0)
-//            userEntity.setPhone(userUpdateRequest.getPhone());
+//        if(employeeUpdateRequest.getPhone().length() != 0)
+//            employeeEntity.setPhone(employeeUpdateRequest.getPhone());
 //
-//        if(userUpdateRequest.getCity().length() != 0)
-//            userEntity.setCity(userUpdateRequest.getCity());
+//        if(employeeUpdateRequest.getCity().length() != 0)
+//            employeeEntity.setCity(employeeUpdateRequest.getCity());
 
-        userRepository.save(userEntity);
-        System.out.println(userEntity);
+        employeeRepository.save(employeeEntity);
+        System.out.println(employeeEntity);
 
         UserDto response = new UserDto();
-        BeanUtils.copyProperties(userEntity, response);
+        BeanUtils.copyProperties(employeeEntity, response);
 
         log.info(response.getLastName(), " ", response.getFirstName());
 
@@ -86,12 +86,12 @@ public class UserDaoImpl implements UserDao {
 
         log.info("[deleteCustomer] UserDaoImpl {}", id);
 
-        UserEntity userEntity = userRepository.findByUserId(id);
+        EmployeeEntity employeeEntity = employeeRepository.findByUserId(id);
         UserDto response = new UserDto();
 
-        BeanUtils.copyProperties(userEntity, response);
+        BeanUtils.copyProperties(employeeEntity, response);
 
-        userRepository.deleteByUserId(id);
+        employeeRepository.deleteByUserId(id);
         return response;
 
     }

@@ -1,8 +1,7 @@
 package com.cars24.slack_hrbp.controller;
 
-import com.cars24.slack_hrbp.data.request.UserUpdateRequest;
-import com.cars24.slack_hrbp.data.response.ApiResponse;
-import com.cars24.slack_hrbp.data.response.CreateUserRequest;
+import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
+import com.cars24.slack_hrbp.data.response.CreateEmployeeRequest;
 import com.cars24.slack_hrbp.service.impl.HrServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,16 +26,16 @@ public class HrController {
 
     @PreAuthorize("hasRole('HR')")
     @PostMapping("/createUser")
-    public ResponseEntity<String> createUser(@RequestBody CreateUserRequest createUserRequest){
-        log.info("HrController createUserRequest, {}", createUserRequest);
-        String response = hrService.createUser(createUserRequest);
+    public ResponseEntity<String> createUser(@RequestBody CreateEmployeeRequest createEmployeeRequest){
+        log.info("HrController createEmployeeRequest, {}", createEmployeeRequest);
+        String response = hrService.createUser(createEmployeeRequest);
         return ResponseEntity.ok().body(response);
     }
 
     @PreAuthorize("asRole('HR')")
     @PutMapping("/update")
-    public ResponseEntity<String> updateUser(@RequestBody UserUpdateRequest userUpdateRequest){
-        String response = hrService.updateUser(userUpdateRequest);
+    public ResponseEntity<String> updateUser(@RequestBody EmployeeUpdateRequest employeeUpdateRequest){
+        String response = hrService.updateUser(employeeUpdateRequest);
         return ResponseEntity.ok().body(response);
     }
 
