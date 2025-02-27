@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,11 +26,11 @@ public class UsernameController {
     @PreAuthorize("hasRole('HR')")
     @GetMapping("/{userId}")
 
-    public List<AttendanceEntity> getUserDetails(@PathVariable String userId){
+    public Map<String, Map<String, String>> getUserDetails(@PathVariable String userId){
 
 
 
-        List<AttendanceEntity> resp=usernameService.getCustomerDetails(userId);
+        Map<String, Map<String, String>> resp=usernameService.getCustomerDetails(userId);
 
         return resp;
 
