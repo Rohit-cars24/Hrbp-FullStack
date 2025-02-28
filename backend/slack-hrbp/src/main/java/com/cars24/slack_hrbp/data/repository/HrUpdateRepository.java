@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HrUpdateRepository extends MongoRepository<EmployeeEntity, String> {
     EmployeeEntity findByUserId(String userId);
-
     boolean existsByUserId(String userId);
 }
 
