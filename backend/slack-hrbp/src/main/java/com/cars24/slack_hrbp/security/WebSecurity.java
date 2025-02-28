@@ -49,6 +49,8 @@ public class WebSecurity {
 
                         .requestMatchers(HttpMethod.POST, "/users/login").permitAll()
 
+                        .requestMatchers("/manager/**").hasAuthority("ROLE_MANAGER")
+
                         .requestMatchers("/employee/**").hasAuthority("ROLE_EMPLOYEE")
 
                         .requestMatchers("/hr/**").hasAuthority("ROLE_HR")
