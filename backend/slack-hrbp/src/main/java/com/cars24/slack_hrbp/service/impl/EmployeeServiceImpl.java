@@ -25,4 +25,5 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new UserServiceException("User not valid");
         return employeeDao.updatePassword(passwordUpdateRequest);
     }
+
 }

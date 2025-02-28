@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
-public class AttendanceServiceImpl {
+public class MonthBasedServiceImpl {
 
     @Autowired
     private AttendanceRepository attendanceRepository;

@@ -1,17 +1,14 @@
 package com.cars24.slack_hrbp.controller;
 
-import com.cars24.slack_hrbp.data.entity.AttendanceEntity;
 import com.cars24.slack_hrbp.data.request.PasswordUpdateRequest;
-import com.cars24.slack_hrbp.service.EmployeeService;
 import com.cars24.slack_hrbp.service.impl.EmployeeServiceImpl;
-import com.cars24.slack_hrbp.service.impl.UsernameServiceImpl;
+import com.cars24.slack_hrbp.service.impl.UseridAndMonthImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -21,8 +18,16 @@ import java.util.Map;
 
 public class EmployeeController {
 
-    private final UsernameServiceImpl usernameService;
+    private final UseridAndMonthImpl usernameService;
     private final EmployeeServiceImpl employeeService;
+    private final UseridAndMonthImpl useridandmonth;
+
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping("/{userid}/{month}")
+    public Map<String, Map<String, String>> getUserDetails(@PathVariable String userid, @PathVariable String month){
+        Map<String, Map<String, String>> resp = useridandmonth.getCustomerDetails(userid,month);
+        return resp;
+    }
 
     @PreAuthorize("hasRole('EMPLOYEE')")
     @GetMapping("/getDetails")
