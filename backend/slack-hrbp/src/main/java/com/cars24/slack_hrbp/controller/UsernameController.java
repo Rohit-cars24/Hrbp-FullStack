@@ -27,10 +27,7 @@ public class UsernameController {
 
     public Map<String, Map<String, String>> getUserDetails(@PathVariable String userId){
 
-
-
         Map<String, Map<String, String>> resp=usernameService.getCustomerDetails(userId);
-
         return resp;
 
     }

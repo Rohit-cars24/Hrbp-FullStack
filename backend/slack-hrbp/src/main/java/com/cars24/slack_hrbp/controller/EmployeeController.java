@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RequestMapping("/employee")
@@ -25,8 +26,8 @@ public class EmployeeController {
 
     @PreAuthorize("hasRole('EMPLOYEE')")
     @GetMapping("/getDetails")
-    public ResponseEntity<List<AttendanceEntity>> getUserDetails(@RequestBody String userid){
-        List<AttendanceEntity> responses = usernameService.getCustomerDetails(userid);
+    public ResponseEntity<Map<String, Map<String, String>>> getUserDetails(@RequestBody String userid){
+        Map<String, Map<String, String>> responses = usernameService.getCustomerDetails(userid);
         return ResponseEntity.ok().body(responses);
     }
 

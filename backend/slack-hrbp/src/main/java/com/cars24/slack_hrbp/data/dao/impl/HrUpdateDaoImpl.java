@@ -32,10 +32,10 @@ public class HrUpdateDaoImpl implements HrUpdateDao {
         // Convert EmployeeEntity to CreateEmployeeRequest
         CreateEmployeeRequest response = new CreateEmployeeRequest();
         response.setUserId(employee.getUserId());
-        response.setUserName(employee.getUsername());
-        response.setPassword(employee.getPassword());
+        response.setUsername(employee.getUsername());
+        response.setPassword(employee.getEncryptedPassword());
         response.setEmail(employee.getEmail());
-        response.setRole(employee.getRoles().isEmpty() ? null : employee.getRoles().get(0));
+        response.setRoles(employee.getRoles());
         response.setEncryptedPassword(employee.getEncryptedPassword());
         response.setManagerName(employee.getManagerName());
         response.setManagerId(employee.getManagerId());
@@ -69,7 +69,6 @@ public class HrUpdateDaoImpl implements HrUpdateDao {
         }
 
         else{
-
             //no need bcz ,such circumstance wont come
             throw new UserDoesntExistException("User Does not Exist");
         }

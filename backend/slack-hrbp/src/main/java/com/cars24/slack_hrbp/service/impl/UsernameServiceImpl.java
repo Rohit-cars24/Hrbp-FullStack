@@ -25,7 +25,6 @@ public class UsernameServiceImpl implements UsernameService {
     @Override
     public Map<String, Map<String, String>> getCustomerDetails(String userId, String month) {
         Map<String, Map<String, String>> resp = usernameDao.getUserDetails(userId,month);
-
         return resp;
     }
 }

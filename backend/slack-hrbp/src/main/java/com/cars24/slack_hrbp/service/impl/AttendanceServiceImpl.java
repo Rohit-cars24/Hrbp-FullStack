@@ -1,6 +1,6 @@
 package com.cars24.slack_hrbp.service.impl;
 
-import com.cars24.slack_hrbp.data.entity.Attendance;
+import com.cars24.slack_hrbp.data.entity.AttendanceEntity;
 import com.cars24.slack_hrbp.data.repository.AttendanceRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -21,7 +21,7 @@ public class AttendanceServiceImpl {
 
     public Map<String, Map<String, String>> generateAttendanceReport(String monthYear) throws IOException, ParseException {
         // Fetch data for the given month and year
-        List<Attendance> attendanceList = attendanceRepository.findByDateStartingWith(monthYear);
+        List<AttendanceEntity> attendanceList = attendanceRepository.findByDateStartingWith(monthYear);
 
         // Create a map to store user-wise attendance data
         Map<String, Map<String, String>> userAttendanceMap = new HashMap<>();
@@ -30,7 +30,8 @@ public class AttendanceServiceImpl {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat displayFormat = new SimpleDateFormat("MMM-dd");
 
-        for (Attendance attendance : attendanceList) {
+        for (AttendanceEntity attendance : attendanceList) {
+
             String username = attendance.getUsername();
             String date = attendance.getDate();
             String requestType = getRequestTypeCode(attendance.getType());
@@ -39,6 +40,7 @@ public class AttendanceServiceImpl {
             String formattedDate = displayFormat.format(parsedDate);
 
             userAttendanceMap.computeIfAbsent(username, k -> new HashMap<>()).put(formattedDate, requestType);
+
         }
 
         // Generate Excel file
