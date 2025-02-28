@@ -1,6 +1,7 @@
 package com.cars24.slack_hrbp.advice;
 
 import com.cars24.slack_hrbp.data.response.ApiResponse;
+import com.cars24.slack_hrbp.excpetion.UserDoesntExistException;
 import com.cars24.slack_hrbp.excpetion.UserServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -52,5 +53,20 @@ public class GlobalExceptionHandler {
         apiResponse.setData(null);
 
         return ResponseEntity.badRequest().body(apiResponse);
+    }
+
+    @ExceptionHandler(UserDoesntExistException.class)
+    public ResponseEntity<ApiResponse> handleUserDoesntExistException(UserDoesntExistException exception){
+        log.info("[handleUserDoesntExistException]");
+
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setStatuscode(HttpStatus.BAD_REQUEST.value());
+        apiResponse.setSuccess(false);
+        apiResponse.setMessage(exception.getMessage());
+        apiResponse.setService("HR Update Service " + HttpStatus.BAD_REQUEST.value());
+        apiResponse.setData(null);
+
+        return ResponseEntity.badRequest().body(apiResponse);
+
     }
 }

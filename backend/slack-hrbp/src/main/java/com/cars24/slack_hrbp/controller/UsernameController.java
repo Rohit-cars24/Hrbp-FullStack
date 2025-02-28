@@ -10,14 +10,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-
 @RequestMapping("/hr")
-
 public class UsernameController {
 
     private final UsernameServiceImpl usernameService;
@@ -31,6 +30,19 @@ public class UsernameController {
 
 
         Map<String, Map<String, String>> resp=usernameService.getCustomerDetails(userId);
+
+        return resp;
+
+    }
+
+    @PreAuthorize("hasRole('HR')")
+    @GetMapping("/{userid}/{month}")
+
+    public Map<String, Map<String, String>> getUserDetails(@PathVariable String userid,@PathVariable String month){
+
+
+
+        Map<String, Map<String, String>> resp=usernameService.getCustomerDetails(userid,month);
 
         return resp;
 

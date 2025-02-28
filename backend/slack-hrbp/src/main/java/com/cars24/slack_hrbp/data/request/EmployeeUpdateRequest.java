@@ -8,4 +8,5 @@ public class EmployeeUpdateRequest {
     String userid;
     String managerid;
     String managername;
+    String role;
 }
