@@ -27,7 +27,7 @@ public class UsernameDaoImpl implements UsernameDao {
             return Collections.emptyMap(); // Return an empty map if no data found
         }
 
-        // Extract username from the first record
+
         String username = resp.get(0).getUsername();
         Map<String, String> attendanceMap = new LinkedHashMap<>();
 
@@ -72,4 +72,57 @@ public class UsernameDaoImpl implements UsernameDao {
         };
 
     }
+
+    @Override
+    public Map<String, Map<String, String>> getUserDetails(String userid, String month) {
+        log.info("Fetching attendance details for userid: {}", userid);
+
+        List<AttendanceEntity> resp = usernameRepository.findByUserid(userid);
+        if (resp.isEmpty()) {
+            return Collections.emptyMap(); // Return an empty map if no data found
+        }
+
+        String username = resp.get(0).getUsername();
+        Map<String, String> attendanceMap = new LinkedHashMap<>();
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd"); // Input format from DB
+        SimpleDateFormat outputFormat = new SimpleDateFormat("MMM-dd"); // Format (Feb-21)
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM-yyyy"); // Correct month-year format
+
+        // Correctly parse the input month (e.g., "Feb-2025")
+        Date parsedMonth;
+        try {
+            parsedMonth = monthFormat.parse(month);
+            log.info("Parsed Month: {}", parsedMonth);
+        } catch (ParseException e) {
+            throw new RuntimeException("Invalid month format. Expected format: MMM-yyyy (e.g., Feb-2025)", e);
+        }
+
+        String targetMonth = monthFormat.format(parsedMonth); // Convert Date back to "MMM-yyyy"
+
+        for (AttendanceEntity entity : resp) {
+            try {
+                Date parsedDate = inputFormat.parse(entity.getDate()); // Convert DB date (yyyy-MM-dd) to Date object
+                String entityMonth = monthFormat.format(parsedDate); // Convert Date to "MMM-yyyy"
+
+                log.info("Entity Month: {}", entityMonth);
+
+                if (entityMonth.equals(targetMonth)) { // Correct month comparison
+                    log.info("Inside If - Date belongs to requested month");
+
+                    String formattedDate = outputFormat.format(parsedDate); // Format Date to "MMM-dd"
+                    String leaveType = getLeaveAbbreviation(entity.getType());
+                    attendanceMap.put(formattedDate, leaveType);
+                }
+            } catch (ParseException e) {
+                log.error("Error parsing date: {}", entity.getDate(), e);
+            }
+        }
+
+        // Construct final response map
+        Map<String, Map<String, String>> result = new LinkedHashMap<>();
+        result.put(username, attendanceMap);
+        return result;
+    }
+
 }
