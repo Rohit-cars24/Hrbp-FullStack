@@ -19,16 +19,21 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     public String updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
-
-        String encryptedPassword = bCryptPasswordEncoder.encode(passwordUpdateRequest.getOldPassword());
         EmployeeEntity entity = employeeRepository.findByUserId(passwordUpdateRequest.getUserid());
 
-        if (!bCryptPasswordEncoder.matches(passwordUpdateRequest.getOldPassword(), encryptedPassword))
-            throw new UserServiceException("Password does not match");
+        if (entity == null) {
+            throw new UserServiceException("User not found");
+        }
 
-        encryptedPassword = bCryptPasswordEncoder.encode(passwordUpdateRequest.getNewPassword());
+        if (!bCryptPasswordEncoder.matches(passwordUpdateRequest.getOldPassword(), entity.getEncryptedPassword())) {
+            throw new UserServiceException("Password does not match");
+        }
+
+        String encryptedPassword = bCryptPasswordEncoder.encode(passwordUpdateRequest.getNewPassword());
         entity.setEncryptedPassword(encryptedPassword);
         employeeRepository.save(entity);
+
         return "Password updated successfully";
     }
+
 }
