@@ -1,7 +1,7 @@
 package com.cars24.slack_hrbp.data.dao;
 
 import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
-import com.cars24.slack_hrbp.data.response.CreateEmployeeRequest;
+import com.cars24.slack_hrbp.data.request.CreateEmployeeRequest;
 import com.cars24.slack_hrbp.data.response.EmployeeDisplayResponse;
 
 import java.util.List;

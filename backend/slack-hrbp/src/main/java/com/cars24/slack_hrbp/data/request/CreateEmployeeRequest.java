@@ -1,4 +1,4 @@
-package com.cars24.slack_hrbp.data.response;
+package com.cars24.slack_hrbp.data.request;
 
 import lombok.Data;
 

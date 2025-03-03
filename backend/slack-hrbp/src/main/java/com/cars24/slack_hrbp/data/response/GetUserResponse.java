@@ -5,10 +5,9 @@ import lombok.Data;
 @Data
 
 public class GetUserResponse {
-    private String userId;
-    private String firstName;
-    private String lastName;
+    private String username;
+    private String managername;
+    private String managerid;
     private String email;
-    private String city;
-    private String phone;
+    private String role;
 }
