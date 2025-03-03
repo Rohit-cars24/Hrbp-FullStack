@@ -26,4 +26,5 @@ public class GraphsController {
         GraphResponse resp = graphsServices.getGraph(userid,month);
         return ResponseEntity.ok().body(resp);
     }
+
 }
