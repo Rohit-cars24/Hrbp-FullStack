@@ -1,7 +1,7 @@
 package com.cars24.slack_hrbp.controller;
 
 import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
-import com.cars24.slack_hrbp.data.response.CreateEmployeeRequest;
+import com.cars24.slack_hrbp.data.request.CreateEmployeeRequest;
 import com.cars24.slack_hrbp.data.response.EmployeeDisplayResponse;
 import com.cars24.slack_hrbp.service.impl.HrServiceImpl;
 import com.cars24.slack_hrbp.service.impl.MonthBasedServiceImpl;
@@ -25,12 +25,6 @@ public class HrController {
     private final HrServiceImpl hrService;
     private final MonthBasedServiceImpl monthBasedService;
     private final UseridAndMonthImpl useridandmonth;
-
-    @PreAuthorize("hasRole('HR')")
-    @GetMapping("/dashboard")
-    public ResponseEntity<String> getHrDashboard() {
-        return ResponseEntity.ok("HR Dashboard Access Granted!");
-    }
 
     @PreAuthorize("hasRole('HR')")
     @PostMapping("/createUser")
@@ -84,5 +78,4 @@ public class HrController {
         return resp;
 
     }
-
 }

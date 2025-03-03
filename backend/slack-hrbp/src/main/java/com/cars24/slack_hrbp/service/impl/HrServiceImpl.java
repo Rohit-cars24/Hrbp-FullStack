@@ -2,7 +2,7 @@ package com.cars24.slack_hrbp.service.impl;
 
 import com.cars24.slack_hrbp.data.dao.impl.HrDaoImpl;
 import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
-import com.cars24.slack_hrbp.data.response.CreateEmployeeRequest;
+import com.cars24.slack_hrbp.data.request.CreateEmployeeRequest;
 import com.cars24.slack_hrbp.data.response.EmployeeDisplayResponse;
 import com.cars24.slack_hrbp.service.HrService;
 import lombok.RequiredArgsConstructor;

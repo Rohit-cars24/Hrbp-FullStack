@@ -4,7 +4,7 @@ import com.cars24.slack_hrbp.data.dao.HrDao;
 import com.cars24.slack_hrbp.data.entity.EmployeeEntity;
 import com.cars24.slack_hrbp.data.repository.EmployeeRepository;
 import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
-import com.cars24.slack_hrbp.data.response.CreateEmployeeRequest;
+import com.cars24.slack_hrbp.data.request.CreateEmployeeRequest;
 import com.cars24.slack_hrbp.data.response.EmployeeDisplayResponse;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
