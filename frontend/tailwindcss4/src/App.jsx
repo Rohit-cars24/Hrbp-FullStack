@@ -6,6 +6,7 @@ import HRDashboard from "./pages/HRDashboard";
 import Login from "./pages/Login";
 import ManagerDashboard from "./pages/ManagerDashboard";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
+import ByMonth from "./pages/ByMonth";
 
 export default function App() {
   return (
@@ -18,7 +19,8 @@ export default function App() {
            <Route path="/hr" element={<HRDashboard/>} />
            <Route path="/manager" element={<ManagerDashboard/>} />
            <Route path="/employee" element={<EmployeeDashboard/>} />
-           
+           <Route path="/hr/:month" element={<ByMonth/>} />
+
         </Routes>
       </BrowserRouter>
   );
