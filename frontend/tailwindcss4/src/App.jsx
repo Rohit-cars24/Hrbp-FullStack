@@ -18,6 +18,7 @@ export default function App() {
            <Route path="/hr" element={<HRDashboard/>} />
            <Route path="/manager" element={<ManagerDashboard/>} />
            <Route path="/employee" element={<EmployeeDashboard/>} />
+           
         </Routes>
       </BrowserRouter>
   );
