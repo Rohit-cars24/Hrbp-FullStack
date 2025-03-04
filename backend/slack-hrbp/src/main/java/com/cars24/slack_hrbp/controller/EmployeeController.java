@@ -22,7 +22,7 @@ public class EmployeeController {
     private final EmployeeServiceImpl employeeService;
     private final UseridAndMonthImpl useridandmonth;
 
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('EMPLOYEE')")
     @GetMapping("/{userid}/{month}")
     public Map<String, Map<String, String>> getUserDetails(@PathVariable String userid, @PathVariable String month){
         Map<String, Map<String, String>> resp = useridandmonth.getCustomerDetails(userid,month);
