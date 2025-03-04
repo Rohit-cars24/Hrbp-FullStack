@@ -6,6 +6,7 @@ import com.cars24.slack_hrbp.data.response.EmployeeDisplayResponse;
 import com.cars24.slack_hrbp.service.impl.HrServiceImpl;
 import com.cars24.slack_hrbp.service.impl.MonthBasedServiceImpl;
 import com.cars24.slack_hrbp.service.impl.UseridAndMonthImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/hr")
 @RequiredArgsConstructor
+@Valid
 
 public class HrController {
 
@@ -28,7 +30,7 @@ public class HrController {
 
     @PreAuthorize("hasRole('HR')")
     @PostMapping("/createUser")
-    public ResponseEntity<String> createUser(@RequestBody CreateEmployeeRequest createEmployeeRequest){
+    public ResponseEntity<String> createUser(@Valid @RequestBody CreateEmployeeRequest createEmployeeRequest){
         log.info("HrController createEmployeeRequest, {}", createEmployeeRequest);
         String response = hrService.createUser(createEmployeeRequest);
         return ResponseEntity.ok().body(response);
