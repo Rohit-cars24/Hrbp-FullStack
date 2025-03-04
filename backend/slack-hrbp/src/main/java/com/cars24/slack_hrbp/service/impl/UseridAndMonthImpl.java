@@ -17,8 +17,8 @@ public class UseridAndMonthImpl implements UseridAndMonth {
     public Map<String, Map<String, String>> getCustomerDetails(String userId) {
 
         Map<String, Map<String, String>> resp = useridAndMonthDao.getUserDetails(userId);
-
         return resp;
+
     }
 
     @Override

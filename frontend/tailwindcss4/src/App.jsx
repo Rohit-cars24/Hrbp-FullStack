@@ -4,6 +4,8 @@ import "react-toastify/dist/ReactToastify.css";
 import HRDashboard from "./pages/HRDashboard";
 
 import Login from "./pages/Login";
+import ManagerDashboard from "./pages/ManagerDashboard";
+import EmployeeDashboard from "./pages/EmployeeDashboard";
 
 export default function App() {
   return (
@@ -14,7 +16,8 @@ export default function App() {
           {/* Auth Pages (No Navbar & Footer) */}
            <Route path="/login" element={<Login />} />
            <Route path="/hr" element={<HRDashboard/>} />
-          
+           <Route path="/manager" element={<ManagerDashboard/>} />
+           <Route path="/employee" element={<EmployeeDashboard/>} />
         </Routes>
       </BrowserRouter>
   );
