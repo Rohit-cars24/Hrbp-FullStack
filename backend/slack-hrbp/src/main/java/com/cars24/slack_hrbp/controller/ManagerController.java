@@ -46,9 +46,12 @@ public class ManagerController {
     @GetMapping("/{userId}")
     public Map<String, Map<String, String>> getUserDetails(@PathVariable String userId){
 
+        System.out.println("GetUserDetails Manager called");
         Map<String, Map<String, String>> resp = useridandmonth.getCustomerDetails(userId);
+        System.out.println(resp);
         return resp;
 
     }
-
 }
+
+
