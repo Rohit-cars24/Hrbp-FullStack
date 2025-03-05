@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // Import components
 import Header from "../components/Header";
@@ -7,54 +8,60 @@ import ActionButtons from "../components/ActionButtons";
 import FilterBar from "../components/FilterBar";
 import LeaveRequestsPanel from "../components/LeaveRequestsPanel";
 import EmployeeInfoPanel from "../components/EmployeeInfoPanel";
-import { useNavigate } from "react-router-dom";
 
 const HRDashboard = () => {
-  const [hrName, setHrName] = useState("Alex Johnson");
-  const [employees, setEmployees] = useState([]);
+  const [hrName, setHrName] = useState("HR Admin");
   const [leaveRequests, setLeaveRequests] = useState([]);
   const [monthFilter, setMonthFilter] = useState("");
   const [employeeFilter, setEmployeeFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [teamMembers, setTeamMembers] = useState([]);
+
+  const navigate = useNavigate();
 
   // Fetch HR data on component mount
   useEffect(() => {
-    // Fetch user data
     const fetchData = async () => {
       try {
         const userId = localStorage.getItem("userid");
         const token = localStorage.getItem("Authorization");
 
-        console.log(token);
+        // Fetch HR details
+        const userResponse = await axios.get(
+          `http://localhost:8080/users/${userId}`,
+          {
+            headers: { Authorization: `${token}` },
+          }
+        );
 
-        const response = await axios.get(`http://localhost:8080/users/${userId}`, {
-          headers: { Authorization: `${token}` },
-        });
-        console.log("HR Name:", response.data);
-        setHrName(response.data);
+        // Set HR name
+        setHrName(userResponse.data || "HR Admin");
 
-        if (hrResponse.data) {
-          setHrName(hrResponse.data.name || "HR Admin");
+        // Fetch leave requests
+        const leaveResponse = await axios.get(
+          `http://localhost:8080/hr/${userId}`,
+          { headers: { Authorization: `${token}` } }
+        );
+
+        console.log(leaveResponse.data);
+
+        // Set leave requests
+        if (leaveResponse.data) {
+          setLeaveRequests(leaveResponse.data);
         }
 
-        // Fetch employees
         const employeesResponse = await axios.get(
-          "http://localhost:8080/users/employees",
+          `http://localhost:8080/hr/allUsers`,
           { headers: { Authorization: token } }
         );
 
         if (employeesResponse.data) {
-          setEmployees(employeesResponse.data);
-        }
-
-        // Fetch leave requests
-        const leaveResponse = await axios.get(
-          "http://localhost:8080/leave/requests",
-          { headers: { Authorization: token } }
-        );
-
-        if (leaveResponse.data) {
-          setLeaveRequests(leaveResponse.data);
+          const formattedEmployees = employeesResponse.data.map((employee) => ({
+            id: employee.userId,
+            email: employee.email,
+            name: employee.username,
+          }));
+          setTeamMembers(formattedEmployees);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -62,121 +69,59 @@ const HRDashboard = () => {
     };
 
     fetchData();
-
-    // For demo, set mock data if API fails
-    setTimeout(() => {
-      if (employees.length === 0) {
-        setEmployees([
-          {
-            id: 1,
-            name: "John Doe",
-            email: "john@example.com",
-            department: "Engineering",
-            position: "Developer",
-            joinDate: "2023-05-15",
-          },
-          {
-            id: 2,
-            name: "Shreyas",
-            email: "shreyas@example.com",
-            department: "Engineering",
-            position: "Developer",
-            joinDate: "2023-05-15",
-          },
-          {
-            id: 2,
-            name: "Shreyas",
-            email: "shreyas@example.com",
-            department: "Engineering",
-            position: "Developer",
-            joinDate: "2023-05-15",
-          },
-          {
-            id: 2,
-            name: "Shreyas",
-            email: "shreyas@example.com",
-            department: "Engineering",
-            position: "Developer",
-            joinDate: "2023-05-15",
-          },
-          {
-            id: 2,
-            name: "Shreyas",
-            email: "shreyas@example.com",
-            department: "Engineering",
-            position: "Developer",
-            joinDate: "2023-05-15",
-          },
-          {
-            id: 2,
-            name: "Shreyas",
-            email: "shreyas@example.com",
-            department: "Engineering",
-            position: "Developer",
-            joinDate: "2023-05-15",
-          },
-          // ... other employee data
-        ]);
-      }
-
-      if (leaveRequests.length === 0) {
-        setLeaveRequests([
-          {
-            id: 101,
-            employeeId: 1,
-            employeeName: "John Doe",
-            type: "Sick Leave",
-            startDate: "2025-03-10",
-            endDate: "2025-03-12",
-            status: "Pending",
-          },
-          {
-            id: 102,
-            employeeId: 2,
-            employeeName: "Shreyas",
-            type: "Sick Leave",
-            startDate: "2025-03-10",
-            endDate: "2025-03-12",
-            status: "Approved",
-          },
-          {
-            id: 102,
-            employeeId: 2,
-            employeeName: "Shreyas",
-            type: "Sick Leave",
-            startDate: "2025-03-10",
-            endDate: "2025-03-12",
-            status: "Approved",
-          },
-          // ... other leave request data
-        ]);
-      }
-    }, 1000);
   }, []);
 
-  // Get filtered leave requests
+  // Filtering logic for leave requests
   const getFilteredLeaveRequests = () => {
-    let filtered = [...leaveRequests];
+    // If leaveRequests is an object with employee names as keys
+    if (
+      leaveRequests &&
+      typeof leaveRequests === "object" &&
+      !Array.isArray(leaveRequests)
+    ) {
+      // If no filters are applied, return the entire object
+      if (!monthFilter && !employeeFilter) return leaveRequests;
 
-    if (monthFilter) {
-      filtered = filtered.filter((request) => {
-        const requestMonth = new Date(request.startDate).getMonth() + 1;
-        return requestMonth === parseInt(monthFilter);
+      // Filter logic for the new data structure
+      const filteredRequests = {};
+      Object.entries(leaveRequests).forEach(([employeeName, requests]) => {
+        // Employee filter
+        if (
+          employeeFilter &&
+          !employeeName.toLowerCase().includes(employeeFilter.toLowerCase())
+        ) {
+          return;
+        }
+
+        // Month filter
+        const filteredEmployeeRequests = {};
+        Object.entries(requests).forEach(([date, status]) => {
+          const requestDate = new Date(date);
+          // If month filter is applied, check if it matches
+          if (
+            !monthFilter ||
+            requestDate.getMonth() + 1 === parseInt(monthFilter)
+          ) {
+            filteredEmployeeRequests[date] = status;
+          }
+        });
+
+        // Only add if there are filtered requests
+        if (Object.keys(filteredEmployeeRequests).length > 0) {
+          filteredRequests[employeeName] = filteredEmployeeRequests;
+        }
       });
+
+      return filteredRequests;
     }
 
-    if (employeeFilter) {
-      filtered = filtered.filter(
-        (request) => request.employeeId.toString() === employeeFilter
-      );
-    }
-
-    return filtered;
+    // Fallback to existing filtering if data structure is different
+    return leaveRequests;
   };
 
-  // Get filtered employees
-  const getFilteredEmployees = () => {
-    let filtered = [...employees];
+  // Get filtered team members
+  const getFilteredTeamMembers = () => {
+    let filtered = [...teamMembers];
 
     if (employeeFilter) {
       filtered = filtered.filter(
@@ -189,16 +134,12 @@ const HRDashboard = () => {
       filtered = filtered.filter(
         (employee) =>
           employee.name.toLowerCase().includes(query) ||
-          employee.email.toLowerCase().includes(query) ||
-          employee.department.toLowerCase().includes(query) ||
-          employee.position.toLowerCase().includes(query)
+          employee.email.toLowerCase().includes(query)
       );
     }
 
     return filtered;
   };
-
-  const navigate = useNavigate();
 
   // Navigation handlers
   const handleCreateUser = () => {
@@ -210,7 +151,7 @@ const HRDashboard = () => {
   };
 
   const handleUpdatePassword = () => {
-    window.location.href = "/update-password";
+    navigate("/update-password");
   };
 
   return (
@@ -225,7 +166,7 @@ const HRDashboard = () => {
         />
 
         <FilterBar
-          employees={employees}
+          employees={teamMembers}
           monthFilter={monthFilter}
           setMonthFilter={setMonthFilter}
           employeeFilter={employeeFilter}
@@ -239,7 +180,7 @@ const HRDashboard = () => {
             <LeaveRequestsPanel leaveRequests={getFilteredLeaveRequests()} />
           </div>
           <div className="overflow-y-auto max-h-[300px]">
-            <EmployeeInfoPanel employees={getFilteredEmployees()} />
+            <EmployeeInfoPanel employees={getFilteredTeamMembers()} />
           </div>
         </div>
       </div>

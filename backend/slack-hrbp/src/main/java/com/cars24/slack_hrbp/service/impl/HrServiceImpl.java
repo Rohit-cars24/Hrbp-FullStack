@@ -34,4 +34,5 @@ public class HrServiceImpl implements HrService {
     public List<EmployeeDisplayResponse> getAllUsers() {
         return hrDao.getAllUsers();
     }
+
 }

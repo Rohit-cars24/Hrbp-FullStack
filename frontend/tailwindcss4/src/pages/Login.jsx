@@ -295,34 +295,26 @@ const AstronautLogin = () => {
         localStorage.setItem("userid", response.data.userId);
         localStorage.setItem("Role", response.data.roles[0]);
     
-        console.log("✅ Setting Role in localStorage:", response.data.roles[0]);
+        console.log("Setting Role in localStorage:", response.data.roles[0]);
     
         // Immediate retrieval check
         let role = localStorage.getItem("Role");
-        console.log("🔍 Retrieved Role Immediately:", role);
+        console.log("Retrieved Role Immediately:", role);
     
         // Delayed retrieval check
         setTimeout(() => {
             let delayedRole = localStorage.getItem("Role");
-            console.log("⏳ Retrieved Role After Delay:", delayedRole);
+            console.log("Retrieved Role After Delay:", delayedRole);
         }, 100);
     
         // Navigation based on role
         if (role === "ROLE_HR") {
             navigate("/hr");
-        } else if (role === "ROLE_Employee") {
+        } else if (role === "ROLE_EMPLOYEE") {
             navigate("/employee");
         } else {
             navigate("/manager");
         }
-    
-        if (role === "ROLE_HR") {
-            navigate("/hr");
-        } else if (role === "ROLE_Employee") {
-            navigate("/employee");
-        } else {
-            navigate("/manager");
-        }       
       } else {
         throw new Error(response.data.message || "Login failed.");
       }
@@ -339,13 +331,11 @@ const AstronautLogin = () => {
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-black fixed inset-0 overflow-hidden">
-      {/* Full-Screen Three.js Canvas */}
       <canvas
         ref={canvasRef}
         className="absolute top-0 left-0 w-full h-full"
       />
 
-      {/* Main Content - Full height and width */}
       <div className="relative z-10 flex items-center justify-center w-full h-full p-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
