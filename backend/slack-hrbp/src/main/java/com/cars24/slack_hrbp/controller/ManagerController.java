@@ -1,6 +1,7 @@
 package com.cars24.slack_hrbp.controller;
 
 
+import com.cars24.slack_hrbp.service.impl.ListAllEmployeesUnderManagerServiceImpl;
 import com.cars24.slack_hrbp.service.impl.MonthBasedServiceImpl;
 import com.cars24.slack_hrbp.service.impl.UseridAndMonthImpl;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,6 +22,7 @@ public class ManagerController {
 
     private final MonthBasedServiceImpl monthBasedService;
     private final UseridAndMonthImpl useridandmonth;
+    private final ListAllEmployeesUnderManagerServiceImpl listAllEmployeesUnderManager;
 
     @PreAuthorize("hasrole('MANAGER')")
     @GetMapping("bymonth")
@@ -46,12 +49,16 @@ public class ManagerController {
     @GetMapping("/{userId}")
     public Map<String, Map<String, String>> getUserDetails(@PathVariable String userId){
 
-        System.out.println("GetUserDetails Manager called");
         Map<String, Map<String, String>> resp = useridandmonth.getCustomerDetails(userId);
-        System.out.println(resp);
         return resp;
 
     }
+
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping("/getAllEmployees/{userId}")
+    public List<List<String>> getAllEmployeesUnderManager(@PathVariable String userId){
+        List<List<String>> lis = listAllEmployeesUnderManager.getAllEmployeesUnderManager(userId);
+        return lis;
+    }
+
 }
-
-

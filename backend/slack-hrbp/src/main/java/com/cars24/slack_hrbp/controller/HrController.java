@@ -50,7 +50,6 @@ public class HrController {
         return ResponseEntity.ok().body(response);
     }
 
-
     @PreAuthorize("hasrole('HR')")
     @GetMapping("bymonth")
     public ResponseEntity<Map<String, Map<String, String>>> getByMonth(@RequestParam String monthYear) {

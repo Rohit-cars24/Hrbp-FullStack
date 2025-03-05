@@ -5,12 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2eeb3965-890a-4d20-9c96-6d5b80310294" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/dao/ListAllEmployeesUnderMangerDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/dao/impl/ListAllEmployeesUnderManagerDaoImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/ListAllEmployeesUnderManagerService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/impl/ListAllEmployeesUnderManagerServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/cars24/slack_hrbp/controllers/EmployeeControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/controller/HrController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/controller/HrController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/controller/ManagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/controller/ManagerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/repository/EmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/repository/EmployeeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/response/EmployeeDisplayResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/response/EmployeeDisplayResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/EmployeeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/EmployeeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/impl/HrServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/impl/HrServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/cars24/slack_hrbp/controllers/ManagerControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/cars24/slack_hrbp/controllers/ManagerControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/controller/EmployeeController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/controller/HrController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/controller/ManagerController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/data/repository/EmployeeRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/data/response/EmployeeDisplayResponse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/App.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
@@ -31,17 +57,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.SlackHrbpApplication.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Stage/Chandan",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Cars24/SlackHRBPFullStack/Hrbp-FullStack/backend"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.SlackHrbpApplication.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SlackHrbpApplicationTests.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Stage/Chandan&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Cars24/Junit_Assignment/junitAssignment&quot;
   }
-}]]></component>
-  <component name="RunManager">
+}</component>
+  <component name="RunManager" selected="Application.SlackHrbpApplication">
     <configuration name="SlackHrbpApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.cars24.slack_hrbp.SlackHrbpApplication" />
       <module name="mobile-app-ws" />
@@ -55,9 +82,25 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="SlackHrbpApplicationTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mobile-app-ws" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.cars24.slack_hrbp.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.cars24.slack_hrbp" />
+      <option name="MAIN_CLASS_NAME" value="com.cars24.slack_hrbp.SlackHrbpApplicationTests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.SlackHrbpApplication" />
+        <item itemvalue="JUnit.SlackHrbpApplicationTests" />
       </list>
     </recent_temporary>
   </component>
