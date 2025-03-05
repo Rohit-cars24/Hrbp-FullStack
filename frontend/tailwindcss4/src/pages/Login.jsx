@@ -286,11 +286,43 @@ const AstronautLogin = () => {
         { headers: { "Content-Type": "application/json" } }
       );
 
+
       if (response.status === 200) {
+        console.log("Wasuup");
+        console.log("Response Data:", response.data);
+    
         localStorage.setItem("Authorization", "Bearer " + response.data.token);
         localStorage.setItem("userid", response.data.userId);
-        localStorage.setItem("Role", JSON.stringify(response.data.roles[0]));
-        setTimeout(() => navigate("/"), 1000);
+        localStorage.setItem("Role", response.data.roles[0]);
+    
+        console.log("✅ Setting Role in localStorage:", response.data.roles[0]);
+    
+        // Immediate retrieval check
+        let role = localStorage.getItem("Role");
+        console.log("🔍 Retrieved Role Immediately:", role);
+    
+        // Delayed retrieval check
+        setTimeout(() => {
+            let delayedRole = localStorage.getItem("Role");
+            console.log("⏳ Retrieved Role After Delay:", delayedRole);
+        }, 100);
+    
+        // Navigation based on role
+        if (role === "ROLE_HR") {
+            navigate("/hr");
+        } else if (role === "ROLE_Employee") {
+            navigate("/employee");
+        } else {
+            navigate("/manager");
+        }
+    
+        if (role === "ROLE_HR") {
+            navigate("/hr");
+        } else if (role === "ROLE_Employee") {
+            navigate("/employee");
+        } else {
+            navigate("/manager");
+        }       
       } else {
         throw new Error(response.data.message || "Login failed.");
       }

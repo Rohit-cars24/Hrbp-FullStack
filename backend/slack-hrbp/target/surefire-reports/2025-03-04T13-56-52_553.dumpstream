@@ -1,0 +1,5 @@
+# Created at 2025-03-04T13:56:52.729
+Boot Manifest-JAR contains absolute paths in classpath 'D:\Cars24\Hrbp-FullStack\backend\slack-hrbp\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+

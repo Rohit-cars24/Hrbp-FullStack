@@ -7,6 +7,7 @@ import ActionButtons from "../components/ActionButtons";
 import FilterBar from "../components/FilterBar";
 import LeaveRequestsPanel from "../components/LeaveRequestsPanel";
 import EmployeeInfoPanel from "../components/EmployeeInfoPanel";
+import { useNavigate } from "react-router-dom";
 
 const HRDashboard = () => {
   const [hrName, setHrName] = useState("Alex Johnson");
@@ -24,11 +25,13 @@ const HRDashboard = () => {
         const userId = localStorage.getItem("userid");
         const token = localStorage.getItem("Authorization");
 
-        // Fetch HR name and info
-        const hrResponse = await axios.get(
-          `http://localhost:8080/users/${userId}`,
-          { headers: { Authorization: token } }
-        );
+        console.log(token);
+
+        const response = await axios.get(`http://localhost:8080/users/${userId}`, {
+          headers: { Authorization: `${token}` },
+        });
+        console.log("HR Name:", response.data);
+        setHrName(response.data);
 
         if (hrResponse.data) {
           setHrName(hrResponse.data.name || "HR Admin");
@@ -195,13 +198,15 @@ const HRDashboard = () => {
     return filtered;
   };
 
+  const navigate = useNavigate();
+
   // Navigation handlers
   const handleCreateUser = () => {
-    window.location.href = "/create-user";
+    navigate("/hr/create-user");
   };
 
   const handleUpdateUser = () => {
-    window.location.href = "/update-user";
+    navigate("/hr/update-user");
   };
 
   const handleUpdatePassword = () => {
