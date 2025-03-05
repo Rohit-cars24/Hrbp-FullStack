@@ -2,7 +2,50 @@ import React from "react";
 import { Calendar } from "lucide-react";
 import LeaveRequestCard from "./LeaveRequestCard";
 
+// Status code mapping
+const STATUS_CODES = {
+  'P': 'Planned Leave',
+  'W': 'Work From Home',
+  'S': 'Sick Leave',
+  'T': 'Traveling to Gurugram',
+  '?': 'Awaiting Approval',
+  'U': 'Unplanned Leave',
+  'A': 'Approved',
+  'H': "Holiday",
+  'P**': 'Planned Leave(First Half)',
+  'P*': 'Planned Leave(Second Half)',
+  'E': 'Elections'
+};
+
 const LeaveRequestsPanel = ({ leaveRequests }) => {
+  // Transform the data structure to be compatible with LeaveRequestCard
+  const transformLeaveRequests = (requests) => {
+    const transformedRequests = [];
+
+    // If requests is an object with employee names as keys
+    if (requests && typeof requests === 'object' && !Array.isArray(requests)) {
+      Object.entries(requests).forEach(([employeeName, monthlyRequests]) => {
+        Object.entries(monthlyRequests).forEach(([date, status]) => {
+          transformedRequests.push({
+            id: `${employeeName}-${date}`, // Create a unique identifier
+            employeeName,
+            startDate: date,
+            status: STATUS_CODES[status] || status,
+            type: STATUS_CODES[status] || 'Leave'
+          });
+        });
+      });
+    } else if (Array.isArray(requests)) {
+      // If already in the expected format, use as-is
+      return requests;
+    }
+
+    return transformedRequests;
+  };
+
+  // Process leave requests
+  const processedLeaveRequests = transformLeaveRequests(leaveRequests);
+
   return (
     <div className="bg-white rounded-lg p-4 overflow-hidden flex flex-col shadow-sm flex-1 max-h-full">
       <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center">
@@ -25,8 +68,8 @@ const LeaveRequestsPanel = ({ leaveRequests }) => {
             scrollbarWidth: "thin",
           }}
         >
-          {leaveRequests.length > 0 ? (
-            leaveRequests.map((request) => (
+          {processedLeaveRequests.length > 0 ? (
+            processedLeaveRequests.map((request) => (
               <LeaveRequestCard key={request.id} request={request} />
             ))
           ) : (
