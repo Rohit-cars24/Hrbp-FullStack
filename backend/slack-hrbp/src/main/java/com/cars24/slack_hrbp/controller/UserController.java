@@ -1,6 +1,8 @@
 package com.cars24.slack_hrbp.controller;
 
 import com.cars24.slack_hrbp.data.dto.UserDto;
+import com.cars24.slack_hrbp.data.entity.EmployeeEntity;
+import com.cars24.slack_hrbp.data.repository.EmployeeRepository;
 import com.cars24.slack_hrbp.data.request.SignUpRequest;
 import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
 import com.cars24.slack_hrbp.data.response.GetUserResponse;
@@ -8,6 +10,7 @@ import com.cars24.slack_hrbp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,9 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    EmployeeRepository employeeRepository;
+
     @GetMapping(path = "/display/{id}")
     public GetUserResponse getUser(@PathVariable("id") String id){
 
@@ -38,6 +44,17 @@ public class UserController {
 
         return getUserResponse;
     }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<String> getUserName(@PathVariable String userId) {
+        System.out.println("Called username service");
+        EmployeeEntity entity = employeeRepository.findByUserId(userId);
+        if (entity == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        return ResponseEntity.ok(entity.getUsername());
+    }
+
 
     @PostMapping("/signup")
     public ResponseEntity<Map<String, String>> createUser(@RequestBody SignUpRequest signUpRequest) {

@@ -2,10 +2,13 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import HRDashboard from "./pages/HRDashboard";
+import CreateUserPage from "./pages/CreateUserPage";
+import UpdateUserPage from "./pages/UpdateUserPage";
 
 import Login from "./pages/Login";
 import ManagerDashboard from "./pages/ManagerDashboard";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
+import ByMonth from "./pages/ByMonth";
 
 export default function App() {
   return (
@@ -18,6 +21,10 @@ export default function App() {
            <Route path="/hr" element={<HRDashboard/>} />
            <Route path="/manager" element={<ManagerDashboard/>} />
            <Route path="/employee" element={<EmployeeDashboard/>} />
+           <Route path="/hr/create-user" element={<CreateUserPage />} />
+            <Route path="/hr/update-user" element={<UpdateUserPage />} />
+           <Route path="/hr/:month" element={<ByMonth/>} />
+
         </Routes>
       </BrowserRouter>
   );
