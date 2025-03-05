@@ -29,18 +29,29 @@ public class EmployeeController {
         return resp;
     }
 
-    @PreAuthorize("hasRole('EMPLOYEE')")
-    @GetMapping("/getDetails")
-    public ResponseEntity<Map<String, Map<String, String>>> getUserDetails(@RequestBody String userid){
-        Map<String, Map<String, String>> responses = usernameService.getCustomerDetails(userid);
-        return ResponseEntity.ok().body(responses);
-    }
+//    @PreAuthorize("hasRole('EMPLOYEE')")
+//    @GetMapping("/getDetails")
+//    public ResponseEntity<Map<String, Map<String, String>>> getUserDetails(@RequestBody String userid){
+//        Map<String, Map<String, String>> responses = usernameService.getCustomerDetails(userid);
+//        return ResponseEntity.ok().body(responses);
+//    }
 
     @PreAuthorize("hasRole('EMPLOYEE')")
     @PutMapping("/updatePassword")
     public ResponseEntity<String> updatePassword(@RequestBody PasswordUpdateRequest passwordUpdateRequest){
         String response = employeeService.updatePassword(passwordUpdateRequest);
         return ResponseEntity.ok().body(response);
+    }
+
+    @PreAuthorize("hasRole('EMPLOYEE')")
+    @GetMapping("/{userId}")
+    public Map<String, Map<String, String>> getUserDetails(@PathVariable String userId){
+
+        System.out.println("GetUserDetails Manager called");
+        Map<String, Map<String, String>> resp = useridandmonth.getCustomerDetails(userId);
+        System.out.println(resp);
+        return resp;
+
     }
 
 }

@@ -23,18 +23,14 @@ const EmployeeCard = ({ employee }) => {
           <p className="text-sm text-gray-500">
             {employee.email}
           </p>
-          <p className="text-xs text-gray-400 mt-1">
-            Joined:{" "}
-            {new Date(employee.joinDate).toLocaleDateString()}
-          </p>
         </div>
       </div>
       <div className="mt-3 flex space-x-2">
         <button className="px-3 py-1 text-xs bg-blue-600 hover:bg-blue-700 rounded text-white">
-          View Profile
+          View Calender
         </button>
         <button className="px-3 py-1 text-xs bg-purple-600 hover:bg-purple-700 rounded text-white">
-          Edit
+          Details
         </button>
       </div>
     </div>
