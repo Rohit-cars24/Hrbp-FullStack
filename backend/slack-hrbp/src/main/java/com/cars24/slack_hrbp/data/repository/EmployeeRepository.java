@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface EmployeeRepository extends MongoRepository<EmployeeEntity, String>, PagingAndSortingRepository<EmployeeEntity, String> {
 
@@ -21,4 +23,7 @@ public interface EmployeeRepository extends MongoRepository<EmployeeEntity, Stri
     void deleteByUserId(String id);
 
     Page<EmployeeEntity> findAll(Pageable pageable);
+
+    List<EmployeeEntity> findByManagerId(String id);
+
 }
