@@ -69,6 +69,24 @@ export default function App() {
           }
         />
 
+        <Route
+          path="/hr/:userId/:month"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_HR"]}>
+              <SearchByUserid />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/hr/monthly/:userId/:month"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_HR"]}>
+              <ByMonth />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Protected Manager Route */}
         <Route
           path="/manager"
@@ -78,8 +96,25 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-      
 
+        <Route
+          path="/manager/:userId/:month"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_MANAGER"]}>
+              <SearchByUserid />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/manager/monthly/:userId/:month"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_MANAGER"]}>
+              <ByMonth />
+            </ProtectedRoute>
+          }
+        />
+      
         {/* Protected Employee Route */}
         <Route
           path="/employee"

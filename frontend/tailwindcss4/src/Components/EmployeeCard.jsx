@@ -3,8 +3,14 @@ import { useNavigate } from "react-router-dom";
 
 const EmployeeCard = ({ employee }) => {
   const navigate = useNavigate();
-  
 
+  const role = localStorage.getItem("Role");
+
+  const viewCalender = () => {
+    if(role === "ROLE_HR") navigate(`/hr/${employee.id}/Mar-2025`);
+    else navigate(`/manager/${employee.id}/Mar-2025`);
+  }
+  
   const handleUpdateClick = () => {
     navigate(`/hr/updateemployee/${employee.id}`, { state: { employee } });
   };
@@ -28,7 +34,9 @@ const EmployeeCard = ({ employee }) => {
         </div>
       </div>
       <div className="mt-3 flex space-x-2">
-        <button className="px-3 py-1 text-xs bg-blue-600 hover:bg-blue-700 rounded text-white">
+        <button 
+        onClick = {viewCalender}
+        className="px-3 py-1 text-xs bg-blue-600 hover:bg-blue-700 rounded text-white">
           View Calendar
         </button>
         <button
