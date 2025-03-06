@@ -144,126 +144,123 @@ const EnhancedCalendarView = () => {
 
   // Status icons and labels
   const getStatusIcon = (status) => {
-    switch (status) {
-      case "WFH":
-        return (
-          <div className="flex items-center justify-center">
-            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-            </svg>
-            <div className="text-xs font-medium mt-1">W</div>
-          </div>
-        );
-      case "Planned Leave":
-        return (
-          <div className="flex items-center justify-center">
-            <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-            </svg>
-            <div className="text-xs font-medium mt-1">P</div>
-          </div>
-        );
-      case "Unplanned Leave":
-        return (
-          <div className="flex items-center justify-center">
-            <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <div className="text-xs font-medium mt-1">U</div>
-          </div>
-        );
-      case "Planned Leave (Second Half)":
-        return (
-          <div className="flex items-center justify-center">
-            <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-            </svg>
-            <div className="text-xs font-medium mt-1">P*</div>
-          </div>
-        );
-      case "Planned Leave (First Half)":
-        return (
-          <div className="flex items-center justify-center">
-            <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-            </svg>
-            <div className="text-xs font-medium mt-1">P**</div>
-          </div>
-        );
-      case "Sick Leave":
-        return (
-          <div className="flex items-center justify-center">
-            <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-            </svg>
-            <div className="text-xs font-medium mt-1">S</div>
-          </div>
-        );
-      case "Travelling to HQ":
-        return (
-          <div className="flex items-center justify-center">
-            <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-            </svg>
-            <div className="text-xs font-medium mt-1">T</div>
-          </div>
-        );
-      case "Holiday":
-        return (
-          <div className="flex items-center justify-center">
-            <svg className="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
-            </svg>
-            <div className="text-xs font-medium mt-1">H</div>
-          </div>
-        );
-      case "Elections":
-        return (
-          <div className="flex items-center justify-center">
-            <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-            </svg>
-            <div className="text-xs font-medium mt-1">E</div>
-          </div>
-        );
-      case "Joined":
-        return (
-          <div className="flex items-center justify-center">
-            <svg className="w-5 h-5 text-lime-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-            </svg>
-            <div className="text-xs font-medium mt-1">J</div>
-          </div>
-        );
-      case "Present":
-        return (
-          <div className="flex items-center justify-center">
-            <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <div className="text-xs font-medium mt-1">✓</div>
-          </div>
-        );
-      case "Absent":
-        return (
-          <div className="flex items-center justify-center">
-            <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <div className="text-xs font-medium mt-1">A</div>
-          </div>
-        );
-      default:
-        return (
-          <div className="flex items-center justify-center">
-            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <div className="text-xs font-medium mt-1">?</div>
-          </div>
-        );
-    }
-  };
+    const baseIconClass = "w-6 h-6 transition-all duration-300 ease-in-out";
+    const textClass = "text-xs font-medium mt-1 transition-all duration-300";
+    
+    const statusConfig = {
+      "W": {
+        icon: <svg className={`${baseIconClass} text-blue-600 hover:text-blue-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+        </svg>,
+        label: "WFH",
+        textColor: "text-blue-800"
+      },
+      "P": {
+        icon: <svg className={`${baseIconClass} text-amber-600 hover:text-amber-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>,
+        label: "PL",
+        textColor: "text-amber-800"
+      },
+      "?": {
+        icon: <svg className={`${baseIconClass} text-orange-600 hover:text-orange-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>,
+        label: "UL",
+        textColor: "text-orange-800"
+      },
+      "P**": {
+        icon: <svg className={`${baseIconClass} text-amber-600 hover:text-amber-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>,
+        label: "PL²",
+        textColor: "text-amber-800"
+      },
+      "P*": {
+        icon: <svg className={`${baseIconClass} text-amber-600 hover:text-amber-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>,
+        label: "PL¹",
+        textColor: "text-amber-800"
+      },
+      "S": {
+        icon: <svg className={`${baseIconClass} text-purple-600 hover:text-purple-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+        </svg>,
+        label: "SL",
+        textColor: "text-purple-800"
+      },
+      "T": {
+        icon: <svg className={`${baseIconClass} text-indigo-600 hover:text-indigo-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+        </svg>,
+        label: "HQ",
+        textColor: "text-indigo-800"
+      },
+      "H": {
+        icon: <svg className={`${baseIconClass} text-teal-600 hover:text-teal-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+        </svg>,
+        label: "HOL",
+        textColor: "text-teal-800"
+      },
+      "E": {
+        icon: <svg className={`${baseIconClass} text-cyan-600 hover:text-cyan-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+        </svg>,
+        label: "EL",
+        textColor: "text-cyan-800"
+      },
+      "J": {
+        icon: <svg className={`${baseIconClass} text-lime-600 hover:text-lime-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+        </svg>,
+        label: "JOIN",
+        textColor: "text-lime-800"
+      },
+      "Present": {
+        icon: <svg className={`${baseIconClass} text-green-600 hover:text-green-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>,
+        label: "✓",
+        textColor: "text-green-800"
+      },
+      "A": {
+        icon: <svg className={`${baseIconClass} text-red-600 hover:text-red-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>,
+        label: "ABS",
+        textColor: "text-red-800"
+      }
+    };
+    // Default/fallback icon
+    const defaultConfig = {
+      icon: <svg className={`${baseIconClass} text-gray-600 hover:text-gray-700`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>,
+      label: "?",
+      textColor: "text-gray-600"
+    };
+
+    // Normalize the status input
+    const normalizedStatus = status.trim();
+    
+    console.log("Checking status:", normalizedStatus);
+    
+    const config = statusConfig[normalizedStatus] || defaultConfig;
+
+    return (
+      <div className="flex flex-col items-center justify-center group">
+        <div className="transform group-hover:scale-110 transition-transform duration-200">
+          {config.icon}
+        </div>
+        <div className={`${textClass} ${config.textColor} font-semibold`}>
+          {config.label} 
+        </div>
+      </div>
+    );
+};
+
 
   // Generate the calendar
   const generateCalendar = () => {
@@ -356,7 +353,7 @@ const EnhancedCalendarView = () => {
             {status ? (
               <>
                 {getStatusIcon(status)}
-                <div className="text-xs font-medium mt-1">{status}</div>
+                <div className="text-xs font-medium mt-1">{status} </div>
               </>
             ) : weekend ? (
               <div className="mt-6 text-xs text-gray-400">Weekend</div>
@@ -412,7 +409,7 @@ const EnhancedCalendarView = () => {
         <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="p-4 bg-gradient-to-r from-blue-600 to-blue-500 text-white">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-              <h2 className="text-2xl font-bold mb-2 md:mb-0">Attendance Report</h2>
+              <h2 className="text-2xl font-bold mb-2 md:mb-0">Attendance Report </h2>
               <div className="flex items-center">
                 <div className="flex flex-col text-right">
                   <span className="font-medium text-lg">{employeeName}</span>
