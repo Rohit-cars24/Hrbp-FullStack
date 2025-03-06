@@ -21,6 +21,8 @@ const EnhancedCalendarView = () => {
       return;
     }
 
+    console.log(month);
+
     fetch(`http://localhost:8080/hr/${userid}/${month}`, {
       method: "GET",
       headers: {
@@ -405,7 +407,7 @@ const EnhancedCalendarView = () => {
 
   return (
 
-    <div className="min-h-screen w-full flex justify-center bg-black fixed inset-0 text-white ">
+    <div className="min-h-screen w-full bg-gray-900 flex flex-col items-center justify-center">
 
     <div className="min-h-screen w-full flex justify-center bg-gray-100">
       <div className="p-4 w-full">
