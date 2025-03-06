@@ -25,6 +25,7 @@ public class HrDaoImpl implements HrDao {
 
     private final EmployeeRepository employeeRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+//    private final UpdateEmployeeResponse updateEmployeeResponse;
 
     @Override
     public String createUser(CreateEmployeeRequest createEmployeeRequest) {
@@ -39,11 +40,11 @@ public class HrDaoImpl implements HrDao {
 
     @Override
     public String updateUser(EmployeeUpdateRequest employeeUpdateRequest) {
-        EmployeeEntity employeeEntity = employeeRepository.findByUserId(employeeUpdateRequest.getUserid());
+        EmployeeEntity employeeEntity = employeeRepository.findByUserId(employeeUpdateRequest.getUserId());
         log.info("HrDaoImpl employeeUpdateRequest, {}", employeeUpdateRequest);
         log.info("HrDaoImpl employeeEntity, {}", employeeEntity);
-        employeeEntity.setManagerId(employeeUpdateRequest.getManagerid());
-        employeeEntity.setManagerName(employeeUpdateRequest.getManagername());
+        employeeEntity.setManagerId(employeeUpdateRequest.getManagerId());
+        employeeEntity.setManagerName(employeeUpdateRequest.getManagerName());
         employeeRepository.save(employeeEntity);
         return "Update was successful";
     }
@@ -62,5 +63,13 @@ public class HrDaoImpl implements HrDao {
         }
 
         return responses;
+    }
+
+    @Override
+    public EmployeeEntity getUser(String userid) {
+
+        EmployeeEntity employeeEntity=employeeRepository.findByUserId(userid);
+
+        return employeeEntity;
     }
 }

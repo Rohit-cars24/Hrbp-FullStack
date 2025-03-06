@@ -6,7 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="2eeb3965-890a-4d20-9c96-6d5b80310294" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/CreateUserPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/CreateUserPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/controller/HrController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/controller/HrController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/dao/HrDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/dao/HrDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/dao/impl/HrDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/dao/impl/HrDaoImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/repository/EmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/repository/EmployeeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/request/EmployeeUpdateRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/request/EmployeeUpdateRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/HrService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/HrService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/impl/HrServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/impl/HrServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/controller/HrController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/controller/HrController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/Components/EmployeeCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/Components/EmployeeCard.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +55,7 @@
     &quot;JUnit.SlackHrbpApplicationTests.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Stage/Rohit&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Stage/Jaggu&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/Cars24/Junit_Assignment/junitAssignment&quot;
   }

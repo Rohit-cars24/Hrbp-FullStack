@@ -10,7 +10,9 @@ import EmployeeDashboard from "./pages/EmployeeDashboard";
 import ByMonth from "./pages/ByMonth";
 import UnauthorizedPage from "./pages/UnauthorizedPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import ProtectedRoute from "./Components/ProtectedRoute";  
+import ProtectedRoute from "./Components/ProtectedRoute"; 
+import SearchByUserid from "./pages/SearchByUserId" 
+import EmployeeDetails from "./pages/EmployeeDetails";
 
 export default function App() {
   return (
@@ -22,6 +24,8 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
         <Route path="/not-found" element={<NotFoundPage />} />
+        <Route path="/hr/:userid/:month" element={<SearchByUserid />} />
+        <Route path="/updateemployee/:id" element={<EmployeeDetails />} />
 
         {/* Protected HR Routes */}
         <Route

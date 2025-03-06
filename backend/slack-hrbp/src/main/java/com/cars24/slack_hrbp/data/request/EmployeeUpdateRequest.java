@@ -5,8 +5,8 @@ import lombok.Data;
 @Data
 
 public class EmployeeUpdateRequest {
-    String userid;
-    String managerid;
-    String managername;
+    String userId;
+    String managerId;
+    String managerName;
     String role;
 }

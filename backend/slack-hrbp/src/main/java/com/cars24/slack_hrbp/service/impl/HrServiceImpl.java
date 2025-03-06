@@ -1,9 +1,11 @@
 package com.cars24.slack_hrbp.service.impl;
 
 import com.cars24.slack_hrbp.data.dao.impl.HrDaoImpl;
+import com.cars24.slack_hrbp.data.entity.EmployeeEntity;
 import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
 import com.cars24.slack_hrbp.data.request.CreateEmployeeRequest;
 import com.cars24.slack_hrbp.data.response.EmployeeDisplayResponse;
+import com.cars24.slack_hrbp.data.response.UpdateEmployeeResponse;
 import com.cars24.slack_hrbp.service.HrService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,10 @@ public class HrServiceImpl implements HrService {
     @Override
     public String updateUser(EmployeeUpdateRequest employeeUpdateRequest) {
         return hrDao.updateUser(employeeUpdateRequest);
+    }
+    @Override
+    public EmployeeEntity getUser(String userid) {
+        return hrDao.getUser(userid);
     }
 
     @Override
