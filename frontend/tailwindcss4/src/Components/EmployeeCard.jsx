@@ -6,7 +6,7 @@ const EmployeeCard = ({ employee }) => {
   
 
   const handleUpdateClick = () => {
-    navigate(`/updateemployee/${employee.id}`, { state: { employee } });
+    navigate(`/hr/updateemployee/${employee.id}`, { state: { employee } });
   };
 
   return (

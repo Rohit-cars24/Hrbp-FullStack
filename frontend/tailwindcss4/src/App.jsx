@@ -25,7 +25,7 @@ export default function App() {
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
         <Route path="/not-found" element={<NotFoundPage />} />
         <Route path="/hr/:userid/:month" element={<SearchByUserid />} />
-        <Route path="/updateemployee/:id" element={<EmployeeDetails />} />
+        
 
         {/* Protected HR Routes */}
         <Route
@@ -60,6 +60,14 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/hr/updateemployee/:id"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_HR"]}>
+              <EmployeeDetails />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Protected Manager Route */}
         <Route
@@ -70,6 +78,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+      
 
         {/* Protected Employee Route */}
         <Route
