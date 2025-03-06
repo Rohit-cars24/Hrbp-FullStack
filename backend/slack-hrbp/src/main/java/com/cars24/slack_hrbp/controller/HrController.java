@@ -1,5 +1,6 @@
 package com.cars24.slack_hrbp.controller;
 
+import com.cars24.slack_hrbp.data.entity.EmployeeEntity;
 import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
 import com.cars24.slack_hrbp.data.request.CreateEmployeeRequest;
 import com.cars24.slack_hrbp.data.response.EmployeeDisplayResponse;
@@ -36,12 +37,13 @@ public class HrController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PreAuthorize("asRole('HR')")
+    @PreAuthorize("hasRole('HR')")
     @PutMapping("/update")
-    public ResponseEntity<String> updateUser(@RequestBody EmployeeUpdateRequest employeeUpdateRequest){
+    public ResponseEntity<String> updateUser(@RequestBody EmployeeUpdateRequest employeeUpdateRequest) {
         String response = hrService.updateUser(employeeUpdateRequest);
         return ResponseEntity.ok().body(response);
     }
+
 
     @PreAuthorize("asRole('HR')")
     @GetMapping("/allUsers")
@@ -78,6 +80,16 @@ public class HrController {
         System.out.println("getUserDetails is called");
 
         Map<String, Map<String, String>> resp = useridandmonth.getCustomerDetails(userId);
+        System.out.println(resp);
+        return resp;
+
+    }
+
+    @PreAuthorize("hasRole('HR')")
+    @GetMapping("/update/{userId}")
+    public EmployeeEntity getEmployeeDetails(@PathVariable String userId){
+
+        EmployeeEntity resp = hrService.getUser(userId);
         System.out.println(resp);
         return resp;
 

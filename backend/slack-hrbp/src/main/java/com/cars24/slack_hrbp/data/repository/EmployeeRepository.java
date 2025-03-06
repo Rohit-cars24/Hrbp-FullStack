@@ -1,6 +1,7 @@
 package com.cars24.slack_hrbp.data.repository;
 
 import com.cars24.slack_hrbp.data.entity.EmployeeEntity;
+import com.cars24.slack_hrbp.data.response.UpdateEmployeeResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -17,6 +18,8 @@ public interface EmployeeRepository extends MongoRepository<EmployeeEntity, Stri
     EmployeeEntity findByEmail(String email);
 
     EmployeeEntity findByUserId(String id);
+
+
 
     boolean existsByUserId(String id);
 
