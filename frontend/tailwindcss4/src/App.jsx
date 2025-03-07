@@ -14,6 +14,7 @@ import ProtectedRoute from "./Components/ProtectedRoute";
 import SearchByUserid from "./pages/SearchByUserId" 
 import EmployeeDetails from "./pages/EmployeeDetails";
 import UpdatePassword from "./pages/UpdatePassword";
+import GraphView from "./pages/GraphView";
 
 export default function App() {
   return (
@@ -98,10 +99,10 @@ export default function App() {
         />
 
         <Route
-          path="/user/update-password"
+          path="/hr/graph/:userId/:month"
           element={
-            <ProtectedRoute allowedRoles={["ROLE_EMPLOYEE"]}>
-              <UpdatePassword />
+            <ProtectedRoute allowedRoles={["ROLE_HR"]}>
+              <GraphView />
             </ProtectedRoute>
           }
         />
@@ -142,6 +143,16 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/manager/graph/:userId/:month"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_MANAGER"]}>
+              <GraphView />
+            </ProtectedRoute>
+          }
+        />
+
       
         {/* Protected Employee Route */}
         <Route
@@ -149,6 +160,15 @@ export default function App() {
           element={
             <ProtectedRoute allowedRoles={["ROLE_EMPLOYEE"]}>
               <EmployeeDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/user/update-password"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_EMPLOYEE"]}>
+              <UpdatePassword />
             </ProtectedRoute>
           }
         />
