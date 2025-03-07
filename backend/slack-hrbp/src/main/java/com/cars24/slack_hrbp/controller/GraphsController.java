@@ -20,7 +20,7 @@ public class GraphsController {
 
     private final GraphServicesImpl graphsServices;
 
-    @PreAuthorize("asRole('HR')")
+    @PreAuthorize("hasAnyRole('HR', 'MANAGER')")
     @GetMapping()
     public ResponseEntity<GraphResponse> getGraph(@RequestParam String userid , String month){
         GraphResponse resp = graphsServices.getGraph(userid,month);

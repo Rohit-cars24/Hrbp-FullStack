@@ -102,10 +102,9 @@ public class UseridAndMonthDaoImpl implements UseridAndMonthDao {
 
         for (AttendanceEntity entity : resp) {
             try {
+
                 Date parsedDate = inputFormat.parse(entity.getDate()); // Convert DB date (yyyy-MM-dd) to Date object
                 String entityMonth = monthFormat.format(parsedDate); // Convert Date to "MMM-yyyy"
-
-                log.info("Entity Month: {}", entityMonth);
 
                 if (entityMonth.equals(targetMonth)) { // Correct month comparison
                     log.info("Inside If - Date belongs to requested month");
