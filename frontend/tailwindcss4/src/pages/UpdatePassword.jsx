@@ -1,120 +1,291 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const UpdatePasswordModal = ({ isOpen, onClose }) => {
-  const [passwords, setPasswords] = useState({
-    oldPassword: '',
-    newPassword: '',
-    confirmNewPassword: ''
-  });
-  const [error, setError] = useState('');
+const UpdatePassword = () => {
+  const [stage, setStage] = useState("verify"); // "verify" or "update"
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setPasswords(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-    setError('');
-  };
+  // Password verification animation states
+  const [verifying, setVerifying] = useState(false);
+  const [passwordShake, setPasswordShake] = useState(false);
 
-  const handleSubmit = async (e) => {
+  // Calculate password strength
+  useEffect(() => {
+    if (!newPassword) {
+      setPasswordStrength(0);
+      return;
+    }
+    
+    let strength = 0;
+    // Length check
+    if (newPassword.length >= 8) strength += 1;
+    // Has uppercase
+    if (/[A-Z]/.test(newPassword)) strength += 1;
+    // Has lowercase
+    if (/[a-z]/.test(newPassword)) strength += 1;
+    // Has number
+    if (/[0-9]/.test(newPassword)) strength += 1;
+    // Has special character
+    if (/[^A-Za-z0-9]/.test(newPassword)) strength += 1;
+    
+    setPasswordStrength(strength);
+  }, [newPassword]);
+
+  const handleVerifyPassword = async (e) => {
     e.preventDefault();
-
-    // Validate passwords match
-    if (passwords.newPassword !== passwords.confirmNewPassword) {
-      setError('New passwords do not match');
+    if (!currentPassword) {
+      setError("Please enter your current password");
       return;
     }
 
+    setVerifying(true);
+    setLoading(true);
+    setError("");
+    
     try {
-      const token = localStorage.getItem('Authorization');
-      const userId = localStorage.getItem('userid');
-
-      await axios.put(`http://localhost:8080/users/update-password/${userId}`,
-        {
-          oldPassword: passwords.oldPassword,
-          newPassword: passwords.newPassword
-        },
-        {
-          headers: { Authorization: token }
-        }
+      const userId = localStorage.getItem("userid");
+      const token = localStorage.getItem("Authorization");
+      
+      const response = await axios.post(
+        "http://localhost:8080/users/verify-password",
+        { userId, password: currentPassword },
+        { headers: { Authorization: token } }
       );
-
-      alert('Password updated successfully!');
-      onClose();
+      
+      if (response.data.success) {
+        // Successful verification animation
+        setTimeout(() => {
+          setVerifying(false);
+          setLoading(false);
+          setStage("update");
+        }, 1500);
+      } else {
+        throw new Error("Password verification failed");
+      }
     } catch (error) {
-      console.error('Error updating password:', error);
-      setError(error.response?.data?.message || 'Failed to update password');
+      console.error("Error verifying password:", error);
+      setVerifying(false);
+      setLoading(false);
+      setError("Current password is incorrect");
+      setPasswordShake(true);
+      setTimeout(() => setPasswordShake(false), 500);
     }
   };
 
-  if (!isOpen) return null;
+  const handleUpdatePassword = async (e) => {
+    e.preventDefault();
+    setError("");
+    
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+    
+    if (newPassword.length < 8) {
+      setError("Password must be at least 8 characters long");
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      const userId = localStorage.getItem("userid");
+      const token = localStorage.getItem("Authorization");
+      
+      const response = await axios.post(
+        "http://localhost:8080/hr/updatePassword",
+        { userId, newPassword },
+        { headers: { Authorization: token } }
+      );
+      
+      if (response.data.success) {
+        setLoading(false);
+        setSuccess(true);
+        
+        // Navigate back to dashboard after success
+        setTimeout(() => {
+          navigate("/hr");
+        }, 2000);
+      } else {
+        throw new Error("Failed to update password");
+      }
+    } catch (error) {
+      console.error("Error updating password:", error);
+      setLoading(false);
+      setError("Failed to update password. Please try again.");
+    }
+  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white/10 backdrop-blur-lg rounded-xl shadow-2xl w-full max-w-md p-8">
-        <h2 className="text-3xl font-bold mb-6 text-center text-blue-300">Update Password</h2>
+    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-blue-900 via-indigo-800 to-purple-900">
+      <div className="max-w-md w-full p-8 bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white border-opacity-20">
+        <h1 className={`text-3xl font-bold text-center mb-8 text-black`}>
+          {stage === "verify" ? "Verify Your Identity" : "Update Your Password"}  
+        </h1>
 
-        {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-blue-200 mb-2">Old Password</label>
-            <input
-              type="password"
-              name="oldPassword"
-              value={passwords.oldPassword}
-              onChange={handleInputChange}
-              required
-              className="w-full px-3 py-2 bg-blue-900/50 border border-blue-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-blue-200 mb-2">New Password</label>
-            <input
-              type="password"
-              name="newPassword"
-              value={passwords.newPassword}
-              onChange={handleInputChange}
-              required
-              className="w-full px-3 py-2 bg-blue-900/50 border border-blue-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-blue-200 mb-2">Confirm New Password</label>
-            <input
-              type="password"
-              name="confirmNewPassword"
-              value={passwords.confirmNewPassword}
-              onChange={handleInputChange}
-              required
-              className="w-full px-3 py-2 bg-blue-900/50 border border-blue-700 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="flex justify-between pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-md transition duration-300 ease-in-out transform hover:scale-105"
-            >
-              Cancel
-            </button>
-
+        {/* Verification Stage */}
+        {stage === "verify" && (
+          <form onSubmit={handleVerifyPassword} className="space-y-6">
+            <div className="relative">
+              <label htmlFor="currentPassword" className="block text-black mb-2">
+                Current Password :
+              </label>
+              <div className={`relative ${passwordShake ? "animate-shake" : ""}`}>
+                <input
+                  type="password"
+                  id="currentPassword"
+                  className="w-full py-3 px-4 bg-white bg-opacity-20 rounded-lg text-black placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 border border-gray-400"
+                  placeholder="Enter your current password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  disabled={verifying || loading}
+                />
+                {verifying && (
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-blue-400"></div>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {error && (
+              <div className="text-red-300 text-sm font-semibold">{error}</div>
+            )}
+            
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-md transition duration-300 ease-in-out transform hover:scale-105"
+              className={`w-full py-3 rounded-lg transition-all duration-300 font-bold ${
+                loading
+                  ? "bg-gray-600 cursor-not-allowed"
+                  : "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transform hover:-translate-y-1"
+              }`}
+              disabled={loading}
             >
-              Update Password
+              {loading ? "Verifying..." : "Continue"}
             </button>
-          </div>
-        </form>
+            
+            <div className="text-center mt-4">
+              <button
+                type="button"
+                className="text-blue-300 hover:text-blue-200 text-sm"
+                onClick={() => navigate("/hr-dashboard")}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
+        
+        {/* Update Password Stage */}
+        {stage === "update" && (
+          <form onSubmit={handleUpdatePassword} className="space-y-6">
+            <div className="relative">
+              <label htmlFor="newPassword" className="block text-black mb-2">
+                New Password
+              </label>
+              <input
+                type="password"
+                id="newPassword"
+                className="w-full py-3 px-4 bg-white bg-opacity-80 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 border border-gray-400"
+                placeholder="Enter your new password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                disabled={loading}
+              />
+              
+              {/* Password strength meter */}
+              <div className="mt-2">
+                <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+                  <div 
+                    className={`h-full transition-all duration-500 ${
+                      passwordStrength === 0 ? "w-0" :
+                      passwordStrength === 1 ? "w-1/5 bg-red-500" :
+                      passwordStrength === 2 ? "w-2/5 bg-orange-500" :
+                      passwordStrength === 3 ? "w-3/5 bg-yellow-500" :
+                      passwordStrength === 4 ? "w-4/5 bg-blue-500" :
+                      "w-full bg-green-500"
+                    }`}
+                  ></div>
+                </div>
+                <div className="text-xs text-gray-300 mt-1">
+                  {passwordStrength === 0 ? "Enter a password" :
+                   passwordStrength === 1 ? "Too weak" :
+                   passwordStrength === 2 ? "Weak" :
+                   passwordStrength === 3 ? "Medium" :
+                   passwordStrength === 4 ? "Strong" :
+                   "Very strong"}
+                </div>
+              </div>
+            </div>
+            
+            <div className="relative">
+              <label htmlFor="confirmPassword" className="block text-black mb-2">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                className={`w-full py-3 px-4 bg-white bg-opacity-80 rounded-lg text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 border border-gray-400 ${
+                  confirmPassword && newPassword !== confirmPassword ? "border-2 border-red-500" : ""
+                }`}
+                placeholder="Confirm your new password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                disabled={loading}
+              />
+              
+              {confirmPassword && newPassword !== confirmPassword && (
+                <div className="text-red-300 text-sm mt-1">Passwords don't match</div>
+              )}
+            </div>
+            
+            {error && (
+              <div className="text-red-300 text-sm font-semibold">{error}</div>
+            )}
+            
+            {success && (
+              <div className="bg-green-500 bg-opacity-20 border border-green-300 text-green-100 p-3 rounded-lg flex items-center">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Password updated successfully!
+              </div>
+            )}
+            
+            <button
+              type="submit"
+              className={`w-full py-3 rounded-lg transition-all duration-300 font-bold ${
+                loading || (confirmPassword && newPassword !== confirmPassword)
+                  ? "bg-gray-600 cursor-not-allowed"
+                  : "bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 transform hover:-translate-y-1"
+              }`}
+              disabled={loading || (confirmPassword && newPassword !== confirmPassword)}
+            >
+              {loading ? "Updating..." : "Update Password"}
+            </button>
+            
+            <div className="text-center mt-4">
+              <button
+                type="button"
+                className="text-blue-300 hover:text-blue-200 text-sm"
+                onClick={() => setStage("verify")}
+              >
+                Back
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );
 };
 
-export default UpdatePasswordModal;
+export default UpdatePassword;

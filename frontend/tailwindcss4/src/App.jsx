@@ -13,6 +13,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedRoute from "./Components/ProtectedRoute"; 
 import SearchByUserid from "./pages/SearchByUserId" 
 import EmployeeDetails from "./pages/EmployeeDetails";
+import UpdatePassword from "./pages/UpdatePassword";
 
 export default function App() {
   return (
@@ -83,6 +84,15 @@ export default function App() {
           element={
             <ProtectedRoute allowedRoles={["ROLE_HR"]}>
               <ByMonth />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/hr/update-password"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_HR"]}>
+              <UpdatePassword />
             </ProtectedRoute>
           }
         />
