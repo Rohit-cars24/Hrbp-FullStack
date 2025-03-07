@@ -1,7 +1,7 @@
 import React from "react";
 import { LogOut, Lock } from "lucide-react";
 import loginImage from "../assets/logo3.png";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Header = ({ userName, title, userRole }) => {
   const location = useLocation();
@@ -33,11 +33,12 @@ const Header = ({ userName, title, userRole }) => {
     }
   };
 
+  const navigate = useNavigate();
   const role = getRole();
   const isManager = role === "Manager" || role === "Employee";
 
   const handleUpdatePassword = () => {
-    window.location.href = "/update-password";
+    navigate("/user/update-password");
   };
 
   return (
@@ -68,10 +69,19 @@ const Header = ({ userName, title, userRole }) => {
             Update Password
           </button>
         )}
-        <button className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg flex items-center text-white">
-          <LogOut size={16} className="mr-1" />
-          Sign Out
-        </button>
+        <button 
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg flex items-center text-white"
+              onClick={() => {
+                localStorage.setItem("Authorization", "null");
+                localStorage.setItem("userid", "null");
+                localStorage.setItem("Role", "null");
+                window.location.href = "/login";
+              }}
+            >
+              <LogOut size={16} className="mr-1" />
+              Sign Out
+          </button>
+
       </div>
     </header>
   );

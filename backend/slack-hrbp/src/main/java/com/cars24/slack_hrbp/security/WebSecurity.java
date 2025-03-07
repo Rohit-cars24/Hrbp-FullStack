@@ -55,6 +55,8 @@ public class WebSecurity {
 
                         .requestMatchers("/hr/**").hasAuthority("ROLE_HR")
 
+//                        .requestMatchers(HttpMethod.POST, "/users/updatePassword").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .authenticationManager(authenticationManager)

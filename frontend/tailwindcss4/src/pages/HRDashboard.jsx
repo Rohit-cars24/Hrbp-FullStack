@@ -151,7 +151,7 @@ const HRDashboard = () => {
   };
 
   const handleUpdatePassword = () => {
-    navigate("/hr/update-password");
+    navigate("/users/update-password");
   };
 
   return (
