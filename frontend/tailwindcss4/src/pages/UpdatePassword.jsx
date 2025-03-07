@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 
 const UpdatePassword = () => {
   const [stage, setStage] = useState("verify"); // "verify" or "update"
@@ -12,6 +14,12 @@ const UpdatePassword = () => {
   const [success, setSuccess] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
+
+
+  useEffect(() => {
+    localStorage.setItem("previousRoute", location.pathname);
+  }, [location]);
 
   // Password verification animation states
   const [verifying, setVerifying] = useState(false);
@@ -101,7 +109,7 @@ const UpdatePassword = () => {
       const token = localStorage.getItem("Authorization");
       
       const response = await axios.post(
-        "http://localhost:8080/hr/updatePassword",
+        "http://localhost:8080/users/updatePassword",
         { userId, newPassword },
         { headers: { Authorization: token } }
       );
@@ -109,10 +117,12 @@ const UpdatePassword = () => {
       if (response.data.success) {
         setLoading(false);
         setSuccess(true);
-        
+                
         // Navigate back to dashboard after success
+        // const previousRoute = localStorage.getItem("previousRoute") || "/hr";
+        // console.log(previousRoute);
         setTimeout(() => {
-          navigate("/hr");
+          navigate(-1);
         }, 2000);
       } else {
         throw new Error("Failed to update password");

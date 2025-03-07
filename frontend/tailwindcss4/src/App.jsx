@@ -89,9 +89,18 @@ export default function App() {
         />
 
         <Route
-          path="/hr/update-password"
+          path="/users/update-password"
           element={
             <ProtectedRoute allowedRoles={["ROLE_HR"]}>
+              <UpdatePassword />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/user/update-password"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_EMPLOYEE"]}>
               <UpdatePassword />
             </ProtectedRoute>
           }
@@ -103,6 +112,15 @@ export default function App() {
           element={
             <ProtectedRoute allowedRoles={["ROLE_MANAGER"]}>
               <ManagerDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/user/update-password"
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_MANAGER"]}>
+              <UpdatePassword />
             </ProtectedRoute>
           }
         />
