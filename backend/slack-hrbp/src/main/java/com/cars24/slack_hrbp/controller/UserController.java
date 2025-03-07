@@ -3,6 +3,7 @@ package com.cars24.slack_hrbp.controller;
 import com.cars24.slack_hrbp.data.dto.UserDto;
 import com.cars24.slack_hrbp.data.entity.EmployeeEntity;
 import com.cars24.slack_hrbp.data.repository.EmployeeRepository;
+import com.cars24.slack_hrbp.data.request.PasswordVerificationRequest;
 import com.cars24.slack_hrbp.data.request.SignUpRequest;
 import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
 import com.cars24.slack_hrbp.data.response.GetUserResponse;
@@ -12,12 +13,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -31,19 +31,9 @@ public class UserController {
     @Autowired
     EmployeeRepository employeeRepository;
 
-    @GetMapping(path = "/display/{id}")
-    public GetUserResponse getUser(@PathVariable("id") String id){
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
-        log.info("[UserController] GetUserResponse {}", id);
-
-        UserDto userDto = new UserDto();
-        UserDto userDetails = userService.displayCustomer(id);
-
-        GetUserResponse getUserResponse = new GetUserResponse();
-        BeanUtils.copyProperties(userDetails, getUserResponse);
-
-        return getUserResponse;
-    }
 
     @GetMapping("/{userId}")
     public ResponseEntity<String> getUserName(@PathVariable String userId) {
@@ -76,40 +66,32 @@ public class UserController {
 
 
 
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable("id") String id, @RequestBody EmployeeUpdateRequest employeeUpdateRequest){
+    @PostMapping("/verify-password")
+    public ResponseEntity<?> verifyPassword(@RequestBody PasswordVerificationRequest request,
+                                            @RequestHeader("Authorization") String token) {
 
-        UserDto userDto = new UserDto();
-        System.out.println(employeeUpdateRequest);
-        UserDto updatedUser = userService.updateUser(id, employeeUpdateRequest);
+        log.info("[Password Verification] Verifying password for user: {}", request.getUserId());
 
-        return ResponseEntity.ok().body(updatedUser);
-    }
+        // Find user by userId
+        Optional<EmployeeEntity> optionalEntity = Optional.ofNullable(employeeRepository.findByUserId(request.getUserId()));
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<UserDto> deleteUser(@PathVariable("id") String id){
-
-        UserDto userDto = new UserDto();
-
-        UserDto deletedUser = userService.deleteUser(id);
-
-        return ResponseEntity.ok().body(deletedUser);
-    }
-
-    @GetMapping("/displayUsers")
-    public ResponseEntity<List<GetUserResponse>> getAllUsers(@RequestParam(value = "page", defaultValue = "1") int page,
-                                                             @RequestParam(value = "limit", defaultValue = "2") int limit){
-        List<GetUserResponse> responses = new ArrayList<>();
-
-        List<UserDto> users = userService.getAllUsers(page, limit);
-
-        for(UserDto userDto : users){
-            GetUserResponse res = new GetUserResponse();
-            BeanUtils.copyProperties(userDto, res);
-            responses.add(res);
+        if (optionalEntity.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Collections.singletonMap("error", "User not found"));
         }
 
-        return ResponseEntity.ok().body(responses);
+        EmployeeEntity entity = optionalEntity.get();
 
+        // Compare passwords using BCrypt
+        boolean isValid = bCryptPasswordEncoder.matches(request.getPassword(), entity.getEncryptedPassword());
+        System.out.println(isValid);
+
+        if (isValid) {
+            return ResponseEntity.ok(Collections.singletonMap("success", "Password is correct"));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Collections.singletonMap("error", "Invalid password"));
+        }
     }
+
 }

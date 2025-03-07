@@ -1,6 +1,8 @@
 package com.cars24.slack_hrbp.controller;
 
 
+import com.cars24.slack_hrbp.data.request.PasswordUpdateRequest;
+import com.cars24.slack_hrbp.service.impl.EmployeeServiceImpl;
 import com.cars24.slack_hrbp.service.impl.ListAllEmployeesUnderManagerServiceImpl;
 import com.cars24.slack_hrbp.service.impl.MonthBasedServiceImpl;
 import com.cars24.slack_hrbp.service.impl.UseridAndMonthImpl;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +26,7 @@ public class ManagerController {
     private final MonthBasedServiceImpl monthBasedService;
     private final UseridAndMonthImpl useridandmonth;
     private final ListAllEmployeesUnderManagerServiceImpl listAllEmployeesUnderManager;
+    private final EmployeeServiceImpl employeeService;
 
     @PreAuthorize("hasrole('MANAGER')")
     @GetMapping("bymonth")
@@ -59,6 +63,15 @@ public class ManagerController {
     public List<List<String>> getAllEmployeesUnderManager(@PathVariable String userId){
         List<List<String>> lis = listAllEmployeesUnderManager.getAllEmployeesUnderManager(userId);
         return lis;
+    }
+
+    @PreAuthorize("hasRole('MANAGER')")
+    @PostMapping("/updatePassword")
+    public ResponseEntity<?> updatePassword(@RequestBody PasswordUpdateRequest passwordUpdateRequest){
+        System.out.println("Update Password called");
+        String response = employeeService.updatePassword(passwordUpdateRequest);
+        System.out.println(response);
+        return ResponseEntity.ok(Collections.singletonMap("success", true));
     }
 
 }

@@ -4,7 +4,6 @@ import com.cars24.slack_hrbp.data.dao.EmployeeDao;
 import com.cars24.slack_hrbp.data.entity.EmployeeEntity;
 import com.cars24.slack_hrbp.data.repository.EmployeeRepository;
 import com.cars24.slack_hrbp.data.request.PasswordUpdateRequest;
-import com.cars24.slack_hrbp.excpetion.UserServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,17 +18,10 @@ public class EmployeeDaoImpl implements EmployeeDao {
 
     @Override
     public String updatePassword(PasswordUpdateRequest passwordUpdateRequest) {
-        EmployeeEntity entity = employeeRepository.findByUserId(passwordUpdateRequest.getUserid());
-
-        if (entity == null) {
-            throw new UserServiceException("User not found");
-        }
-
-        if (!bCryptPasswordEncoder.matches(passwordUpdateRequest.getOldPassword(), entity.getEncryptedPassword())) {
-            throw new UserServiceException("Password does not match");
-        }
+        EmployeeEntity entity = employeeRepository.findByUserId(passwordUpdateRequest.getUserId());
 
         String encryptedPassword = bCryptPasswordEncoder.encode(passwordUpdateRequest.getNewPassword());
+
         entity.setEncryptedPassword(encryptedPassword);
         employeeRepository.save(entity);
 
