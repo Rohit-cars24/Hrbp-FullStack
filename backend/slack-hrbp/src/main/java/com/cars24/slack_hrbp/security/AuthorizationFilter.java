@@ -69,13 +69,15 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         Claims claims = parser.parseSignedClaims(token).getPayload();
 
         String username = claims.getSubject();
+        String userId = claims.get("userId", String.class); // Extract userId from token
         List<String> roles = claims.get("roles", List.class);
 
         if (username == null) {
             return null;
         }
 
-        // Log the roles to ensure they're extracted correctly
+        // Log extracted details for debugging
+        System.out.println("Extracted userId from JWT: " + userId);
         System.out.println("Roles extracted from JWT: " + roles);
 
         List<GrantedAuthority> authorities = roles != null
@@ -84,9 +86,10 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
                 .collect(Collectors.toList())
                 : List.of();
 
-        // Log authorities assigned
         System.out.println("Authorities assigned: " + authorities);
 
         return new UsernamePasswordAuthenticationToken(username, null, authorities);
+
     }
+
 }

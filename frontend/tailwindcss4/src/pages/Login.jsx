@@ -5,6 +5,7 @@ import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import loginImage from "../assets/logo2.jpg";
 import * as THREE from "three";
+import { jwtDecode } from "jwt-decode";
 
 const AstronautLogin = () => {
   const navigate = useNavigate();
@@ -273,7 +274,6 @@ const AstronautLogin = () => {
     };
   }, []);
 
-  // Login form submission handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -286,31 +286,25 @@ const AstronautLogin = () => {
         { headers: { "Content-Type": "application/json" } }
       );
 
-
       if (response.status === 200) {
-        console.log("Wasuup");
-        console.log("Response Data:", response.data);
+        console.log("Login Successful:", response.data);
     
-        localStorage.setItem("Authorization", "Bearer " + response.data.token);
-        localStorage.setItem("userid", response.data.userId);
-        localStorage.setItem("Role", response.data.roles[0]);
+        // Store only the JWT token
+        localStorage.setItem("Authorization", response.data.token);
     
-        console.log("Setting Role in localStorage:", response.data.roles[0]);
-    
-        // Immediate retrieval check
-        let role = localStorage.getItem("Role");
-        console.log("Retrieved Role Immediately:", role);
-    
-        // Delayed retrieval check
-        setTimeout(() => {
-            let delayedRole = localStorage.getItem("Role");
-            console.log("Retrieved Role After Delay:", delayedRole);
-        }, 100);
-    
+        const decodedToken = jwtDecode(response.data.token);
+        console.log("Decoded Token:", decodedToken);
+
+        const userId = decodedToken.userId;  // Extract userId
+        const roles = decodedToken.roles; // Extract roles array
+
+        console.log("Extracted UserId:", userId);
+        console.log("Extracted Roles:", roles);
+
         // Navigation based on role
-        if (role === "ROLE_HR") {
+        if (roles.includes("ROLE_HR")) {
             navigate("/hr");
-        } else if (role === "ROLE_EMPLOYEE") {
+        } else if (roles.includes("ROLE_EMPLOYEE")) {
             navigate("/employee");
         } else {
             navigate("/manager");

@@ -117,7 +117,7 @@ const EmployeeAttendanceChart = () => {
           const response = await axios.get(
             `http://localhost:8080/graph?userid=${userId}&month=${apiMonth}`,
             {
-              headers: { Authorization: `${token}` },
+              headers: { Authorization: `Bearer ${token}` },
             }
           );
       

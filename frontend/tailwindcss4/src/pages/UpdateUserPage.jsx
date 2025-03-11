@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
 
 const UpdateUserPage = () => {
   const [employees, setEmployees] = useState([]);
@@ -18,7 +19,7 @@ const UpdateUserPage = () => {
       try {
         const token = localStorage.getItem('Authorization');
         const response = await axios.get('http://localhost:8080/users/employees', {
-          headers: { Authorization: token }
+          headers: { Authorization: `Bearer ${token}` }
         });
         setEmployees(response.data);
       } catch (error) {
@@ -58,7 +59,7 @@ const UpdateUserPage = () => {
     try {
       const token = localStorage.getItem('Authorization');
       const response = await axios.put(`http://localhost:8080/users/update/${selectedEmployee.id}`, updateData, {
-        headers: { Authorization: token }
+        headers: { Authorization: `Bearer ${token}`}
       });
       
       alert('User updated successfully!');

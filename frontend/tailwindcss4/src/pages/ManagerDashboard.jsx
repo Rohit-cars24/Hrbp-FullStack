@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 // Import components
 import Header from "../components/Header";
@@ -20,11 +21,13 @@ const ManagerDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userId = localStorage.getItem("userid");
         const token = localStorage.getItem("Authorization");
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;  
+        const userRole = decodedToken.roles?.[0];
 
         const response = await axios.get(`http://localhost:8080/users/${userId}`, {
-          headers: { Authorization: `${token}` },
+          headers: { Authorization: `Bearer ${token}` },
         });
         
         console.log("Manager Name:", response.data);
@@ -34,7 +37,7 @@ const ManagerDashboard = () => {
 
         const leaveResponse = await axios.get(
           `http://localhost:8080/manager/${userId}`,
-          { headers: { Authorization: `${token}` } }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         console.log("Leave Requests:");
@@ -46,7 +49,7 @@ const ManagerDashboard = () => {
 
         const employeesResponse = await axios.get(
           `http://localhost:8080/manager/getAllEmployees/${userId}`,
-          { headers: { Authorization: token } }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
   
         if (employeesResponse.data) {

@@ -80,7 +80,7 @@ const CreateUserPage = () => {
       delete submitData.confirmPassword;
 
       const response = await axios.post('http://localhost:8080/hr/createUser', submitData, {
-        headers: { Authorization: `${token}` }
+        headers: { Authorization: `Bearer ${token}` }
       });
       
       alert('User created successfully!');

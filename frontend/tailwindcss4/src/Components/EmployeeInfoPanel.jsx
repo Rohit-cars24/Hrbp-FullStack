@@ -2,13 +2,16 @@ import React from "react";
 import { Users } from "lucide-react";
 import EmployeeCard from "./EmployeeCard";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const EmployeeInfoPanel = ({ employees }) => {
   
   const navigate = useNavigate();
 
-  const userId = localStorage.getItem("userid");
-  const role = localStorage.getItem("Role");
+  const token = localStorage.getItem("Authorization");
+  const decodedToken = jwtDecode(token);
+  const userId = decodedToken.userId;  
+  const role = decodedToken.roles?.[0];
   
   const showMonthCalender = () => {
     if(role === "ROLE_HR") navigate(`/hr/monthly/${userId}/Mar-2025`);

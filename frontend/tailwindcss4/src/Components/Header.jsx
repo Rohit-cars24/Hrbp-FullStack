@@ -73,8 +73,6 @@ const Header = ({ userName, title, userRole }) => {
               className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg flex items-center text-white"
               onClick={() => {
                 localStorage.setItem("Authorization", "null");
-                localStorage.setItem("userid", "null");
-                localStorage.setItem("Role", "null");
                 window.location.href = "/login";
               }}
             >

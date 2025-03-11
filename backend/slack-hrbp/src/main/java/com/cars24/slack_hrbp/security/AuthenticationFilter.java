@@ -64,30 +64,34 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .map(grantedAuthority -> grantedAuthority.getAuthority())
                 .toList();
 
-        // Debug log for checking the roles in the authentication
-        System.out.println("Roles assigned to user: " + roles);
+        // Fetch userId from the database
+        UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
+        UserDto userDto = userService.getUser(userName);
+        String userId = userDto.getUserId(); // Get the userId
 
-        // Generate JWT with roles
+        // Debug logs
+        System.out.println("Roles assigned to user: " + roles);
+        System.out.println("UserId assigned to token: " + userId);
+
+        // Generate JWT with roles and userId
         String token = Jwts.builder()
                 .subject(userName)
-                .claim("roles", roles) // Add roles as claims
+                .claim("userId", userId)  // Include userId in the token
+                .claim("roles", roles)  // Add roles as claims
                 .expiration(Date.from(now.plusMillis(SecurityConstants.EXPIRATION_TIME)))
                 .issuedAt(Date.from(now))
                 .signWith(secretKey)
                 .compact();
-
-        UserService userService = (UserService) SpringApplicationContext.getBean("userServiceImpl");
-        UserDto userDto = userService.getUser(userName);
 
         // Return token & user info in response body
         res.setContentType("application/json");
         res.setCharacterEncoding("UTF-8");
         res.getWriter().write(new ObjectMapper().writeValueAsString(new LoginResponse(token, userDto.getUserId(), roles)));
 
-
         // Optional: Set headers for backward compatibility
         res.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
         res.addHeader("UserId", userDto.getUserId());
 
     }
+
 }

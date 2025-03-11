@@ -7,6 +7,7 @@ import ActionButtons from "../components/ActionButtons";
 import FilterBar from "../components/FilterBar";
 import LeaveRequestsPanel from "../components/LeaveRequestsPanel";
 import EmployeeInfoPanel from "../components/EmployeeInfoPanel";
+import { jwtDecode } from "jwt-decode";
 
 const EmployeeDashboard = () => {
   const [employeeName, setEmployeeName] = useState("Sam Wilson");
@@ -20,12 +21,14 @@ const EmployeeDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userId = localStorage.getItem("userid");
-        const token = localStorage.getItem("Authorization");
+        const token = localStorage.getItem("Authorization")?.split(" ")[1];
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;  
+        //const role = decodedToken.roles?.[0];
 
         // Fetch employee name and info
         const userResponse = await axios.get(`http://localhost:8080/users/${userId}`, {
-          headers: { Authorization: `${token}` },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         // Set Employee name
@@ -34,7 +37,7 @@ const EmployeeDashboard = () => {
         // Fetch leave requests
         const leaveResponse = await axios.get(
           `http://localhost:8080/employee/${userId}`,
-          { headers: { Authorization: `${token}` } }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         console.log(leaveResponse.data);

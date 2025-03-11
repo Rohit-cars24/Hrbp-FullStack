@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 // Import components
 import Header from "../components/Header";
@@ -23,14 +24,16 @@ const HRDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userId = localStorage.getItem("userid");
         const token = localStorage.getItem("Authorization");
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;  
+        const role = decodedToken.roles?.[0];
 
         // Fetch HR details
         const userResponse = await axios.get(
           `http://localhost:8080/users/${userId}`,
           {
-            headers: { Authorization: `${token}` },
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
 
@@ -40,7 +43,7 @@ const HRDashboard = () => {
         // Fetch leave requests
         const leaveResponse = await axios.get(
           `http://localhost:8080/hr/${userId}`,
-          { headers: { Authorization: `${token}` } }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         console.log(leaveResponse.data);
@@ -52,7 +55,7 @@ const HRDashboard = () => {
 
         const employeesResponse = await axios.get(
           `http://localhost:8080/hr/allUsers`,
-          { headers: { Authorization: token } }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         if (employeesResponse.data) {

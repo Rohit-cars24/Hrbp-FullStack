@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const EnhancedCalendarView = () => {
   const { userid, month: routeMonth } = useParams();
@@ -45,7 +46,9 @@ const EnhancedCalendarView = () => {
   };
 
   const handleGraphClick = () => {
-    const role = localStorage.getItem("Role");
+    const token = localStorage.getItem("Authorization");
+    const decodedToken = jwtDecode(token);
+    const role = decodedToken.roles?.[0];
     if (role === "ROLE_HR") navigate(`/hr/graph/${userid}/${currentMonth}`);
     else navigate(`/manager/graph/${userid}/${currentMonth}`);
   };
