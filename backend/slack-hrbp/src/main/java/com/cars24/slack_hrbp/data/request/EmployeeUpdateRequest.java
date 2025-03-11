@@ -7,6 +7,5 @@ import lombok.Data;
 public class EmployeeUpdateRequest {
     String userId;
     String managerId;
-    String managerName;
     String role;
 }

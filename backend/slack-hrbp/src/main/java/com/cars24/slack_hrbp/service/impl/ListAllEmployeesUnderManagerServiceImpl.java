@@ -18,4 +18,5 @@ public class ListAllEmployeesUnderManagerServiceImpl{
     public Page<List<String>> getAllEmployeesUnderManager(String userId, int page, int limit) {
         return listAllEmployeesUnderManagerDao.getAllEmployeesUnderManager(userId, page, limit);
     }
+
 }

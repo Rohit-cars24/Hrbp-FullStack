@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { ArrowLeft, ArrowRight, PieChartIcon, Calendar, User } from 'lucide-react';
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate  } from "react-router-dom";
 
 const EmployeeAttendanceChart = () => {
   const { userId, month } = useParams();
@@ -10,6 +12,7 @@ const EmployeeAttendanceChart = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(month || 'Mar-2025');
+  const navigate = useNavigate();
 
   // Parse the month string and convert to API format (YYYY-MM)
   const parseMonth = (monthStr) => {
@@ -156,6 +159,21 @@ const EmployeeAttendanceChart = () => {
     
     return workingDays;
   };
+
+  const handleBackButton = () => {
+    const token = localStorage.getItem("Authorization");
+    const decodedToken = jwtDecode(token);
+    const userId = decodedToken.userId;  
+    const roles = decodedToken.roles; 
+
+    if (roles.includes("ROLE_HR")) {
+      navigate("/hr");
+    } else if (roles.includes("ROLE_EMPLOYEE")) {
+        navigate("/employee");
+    } else {
+        navigate("/manager");
+    }
+};
   
   // Updated function to calculate total days and regular workdays
   const getTotalDays = (data) => {
@@ -237,7 +255,8 @@ const EmployeeAttendanceChart = () => {
               </div>
             </div>
             
-            <div className="flex items-center mt-2 md:mt-0 bg-white/10 rounded-lg p-1">
+            <div className='pr-20'>
+            <div className="flex items-center mt-2 md:mt-0 bg-white/10 rounded-lg p-1 ">
               <button 
                 className="p-1 rounded-l-md hover:bg-white/20 transition-colors"
                 onClick={goToPreviousMonth}
@@ -253,6 +272,18 @@ const EmployeeAttendanceChart = () => {
               >
                 <ArrowRight className="h-4 w-4" />
               </button>
+            </div>
+            </div>
+            <div>
+            <button
+              onClick={handleBackButton}
+              className="py-2 px-4 bg-blue-300 text-white rounded-lg text-sm font-medium cursor-pointer transition-colors hover:bg-blue-600 flex items-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Home
+            </button>
             </div>
           </div>
         </div>
