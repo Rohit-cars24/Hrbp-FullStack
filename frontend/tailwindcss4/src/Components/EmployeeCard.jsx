@@ -1,10 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const EmployeeCard = ({ employee }) => {
   const navigate = useNavigate();
 
-  const role = localStorage.getItem("Role");
+  const token = localStorage.getItem("Authorization");
+  const decodedToken = jwtDecode(token);
+  const userId = decodedToken.userId;  
+  const role = decodedToken.roles?.[0];
 
   const viewCalender = () => {
     if (role === "ROLE_HR") navigate(`/hr/${employee.id}/Mar-2025`);

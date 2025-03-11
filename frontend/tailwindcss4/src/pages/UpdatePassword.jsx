@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-
+import { jwtDecode } from "jwt-decode";
 
 const UpdatePassword = () => {
   const [stage, setStage] = useState("verify"); // "verify" or "update"
@@ -59,13 +59,15 @@ const UpdatePassword = () => {
     setError("");
     
     try {
-      const userId = localStorage.getItem("userid");
       const token = localStorage.getItem("Authorization");
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;  
+        const role = decodedToken.roles?.[0];
       
       const response = await axios.post(
         "http://localhost:8080/users/verify-password",
         { userId, password: currentPassword },
-        { headers: { Authorization: token } }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       
       if (response.data.success) {
@@ -105,13 +107,15 @@ const UpdatePassword = () => {
     setLoading(true);
     
     try {
-      const userId = localStorage.getItem("userid");
       const token = localStorage.getItem("Authorization");
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId;  
+      const role = decodedToken.roles?.[0];
       
       const response = await axios.post(
         "http://localhost:8080/users/updatePassword",
         { userId, newPassword },
-        { headers: { Authorization: token } }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       
       if (response.data.success) {

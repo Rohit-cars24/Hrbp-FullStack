@@ -12,7 +12,6 @@ const ActionButtons = ({ onCreateUser, onUpdateUser, onUpdatePassword }) => {
         <span className="mt-2 font-medium">Create User</span>
       </button>
 
-
       <button
         onClick={onUpdatePassword}
         className="flex-1 min-w-44 p-4 bg-cyan-500 rounded-lg text-white flex flex-col items-center justify-center transition-all hover:bg-cyan-600"

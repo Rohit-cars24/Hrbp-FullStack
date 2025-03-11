@@ -5,21 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2eeb3965-890a-4d20-9c96-6d5b80310294" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/controller/ManagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/controller/ManagerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/dao/ListAllEmployeesUnderMangerDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/dao/ListAllEmployeesUnderMangerDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/dao/impl/ListAllEmployeesUnderManagerDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/dao/impl/ListAllEmployeesUnderManagerDaoImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/repository/EmployeeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/data/repository/EmployeeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/HrService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/HrService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/ListAllEmployeesUnderManagerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/ListAllEmployeesUnderManagerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/impl/HrServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/impl/HrServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/impl/ListAllEmployeesUnderManagerServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/service/impl/ListAllEmployeesUnderManagerServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/controller/ManagerController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/controller/ManagerController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/data/dao/ListAllEmployeesUnderMangerDao.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/data/dao/impl/ListAllEmployeesUnderManagerDaoImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/data/dao/impl/ListAllEmployeesUnderManagerDaoImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/data/repository/EmployeeRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/data/repository/EmployeeRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/service/ListAllEmployeesUnderManagerService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/service/impl/HrServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/service/impl/HrServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/service/impl/ListAllEmployeesUnderManagerServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/service/impl/ListAllEmployeesUnderManagerServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Attendance_Report_2025-03.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/Attendance_Report_2025-03.xlsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/security/AuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/security/AuthenticationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/security/AuthorizationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/security/AuthorizationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/security/WebSecurity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/cars24/slack_hrbp/security/WebSecurity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/security/AuthenticationFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/security/AuthenticationFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/security/AuthorizationFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/cars24/slack_hrbp/security/AuthorizationFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/Components/ActionButtons.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/Components/ActionButtons.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/Components/EmployeeCard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/Components/EmployeeCard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/Components/EmployeeInfoPanel.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/Components/EmployeeInfoPanel.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/Components/Header.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/Components/Header.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/Components/ProtectedRoute.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/Components/ProtectedRoute.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/ByMonth.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/ByMonth.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/CreateUserPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/CreateUserPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/EmployeeDashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/EmployeeDashboard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/GraphView.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/GraphView.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/HRDashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/HRDashboard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/Login.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/Login.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/ManagerDashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/ManagerDashboard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/SearchByUserId.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/SearchByUserId.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/UpdatePassword.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/UpdatePassword.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/UpdateUserPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/tailwindcss4/src/pages/UpdateUserPage.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +67,7 @@
     "JUnit.SlackHrbpApplicationTests.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Stage/Rohit",
+    "git-widget-placeholder": "Stage/Chandan",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/Cars24/Junit_Assignment/junitAssignment"
   }

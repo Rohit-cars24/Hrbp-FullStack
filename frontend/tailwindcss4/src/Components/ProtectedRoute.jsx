@@ -1,9 +1,12 @@
 import { Navigate } from "react-router-dom";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const token = localStorage.getItem("Authorization");
-  const userId = localStorage.getItem("userid");
+  const decodedToken = jwtDecode(token);
+  const userId = decodedToken.userId;  
+  const userRole = decodedToken.roles?.[0];
 
   if (!token) {
     return <Navigate to="/login" replace />;
@@ -22,8 +25,6 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   //   }
   // };
 
-  const userRole = localStorage.getItem("Role");
-  console.log("Meow Meow User role : ",userRole)
 
   // if (!userRole) {
   //   getUserRole().then((role) => {

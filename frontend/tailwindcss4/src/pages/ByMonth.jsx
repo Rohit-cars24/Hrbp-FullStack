@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const ByMonth = () => {
   const [reportData, setReportData] = useState(null);
@@ -110,7 +111,7 @@ const ByMonth = () => {
         `http://localhost:8080/hr/bymonth?monthYear=${monthYear}&userid=${userid}`,
         {
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
