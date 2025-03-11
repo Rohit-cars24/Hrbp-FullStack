@@ -1,5 +1,6 @@
 package com.cars24.slack_hrbp.service;
 
+import com.cars24.slack_hrbp.data.dto.UserDto;
 import com.cars24.slack_hrbp.data.entity.EmployeeEntity;
 import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
 import com.cars24.slack_hrbp.data.request.CreateEmployeeRequest;
@@ -16,4 +17,6 @@ public interface HrService {
     List<EmployeeDisplayResponse> getAllUsers();
 
     EmployeeEntity getUser(String userid);
+
+//    List<UserDto> paginatedUsers(int page, int limit);
 }
