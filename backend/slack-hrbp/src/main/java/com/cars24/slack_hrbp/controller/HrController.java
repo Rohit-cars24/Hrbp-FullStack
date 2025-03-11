@@ -12,10 +12,13 @@ import com.cars24.slack_hrbp.service.impl.UseridAndMonthImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -105,6 +108,29 @@ public class HrController {
         String response = employeeService.updatePassword(passwordUpdateRequest);
         System.out.println(response);
         return ResponseEntity.ok(Collections.singletonMap("success", true));
+    }
+//    @PreAuthorize("hasRole('HR')")
+//    @GetMapping("/download/{userid}/{month}")
+//    public Map<String, Map<String, String>> downloadUserDetails(@PathVariable String userid, @PathVariable String month){
+//
+//        Map<String, Map<String, String>> resp = useridandmonth.getCustomerDetails(userid,month);
+//        return resp;
+//
+//    }
+
+    @PreAuthorize("hasRole('HR')")
+    @GetMapping("/download/{userid}/{month}")
+    public ResponseEntity<byte[]> downloadAttendanceExcel(@PathVariable String userid, @PathVariable String month) {
+        try {
+            byte[] excelData = useridandmonth.generateAttendanceExcel(userid, month);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Disposition", "attachment; filename=attendance.xlsx");
+
+            return new ResponseEntity<>(excelData, headers, HttpStatus.OK);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
 
