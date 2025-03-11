@@ -26,4 +26,6 @@ public interface EmployeeRepository extends MongoRepository<EmployeeEntity, Stri
     Page<EmployeeEntity> findByManagerId(String managerId, Pageable pageable);  // ✅ Keep only this
 
     Page<EmployeeEntity> findAll(Pageable pageable);
+
+    boolean existsByManagerId(String managerId);
 }

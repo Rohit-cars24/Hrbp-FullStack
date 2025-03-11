@@ -644,16 +644,40 @@ const EnhancedCalendarView = () => {
       });
   };
 
+  const handleBackButton = () => {
+      const token = localStorage.getItem("Authorization");
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId;  
+      const roles = decodedToken.roles; 
+  
+      if (roles.includes("ROLE_HR")) {
+        navigate("/hr");
+      } else if (roles.includes("ROLE_EMPLOYEE")) {
+          navigate("/employee");
+      } else {
+          navigate("/manager");
+      }
+  };
+
   return (
     <div className="h-screen w-full flex flex-col bg-gray-100 overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-700 to-blue-500 text-white py-4 px-6 shadow-lg">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Attendance Dashboard</h1>
-          <div className="flex flex-col text-right">
+          <div className="flex flex-col text-right pl-200">
             <span className="font-medium text-lg">{employeeName}</span>
             <span className="text-blue-100 text-sm">Employee ID: {userid}</span>
           </div>
+          <button
+              onClick={handleBackButton}
+              className="py-2 px-4 bg-blue-300 text-white rounded-lg text-sm font-medium cursor-pointer transition-colors hover:bg-blue-600 flex items-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Back
+          </button>
         </div>
       </div>
 

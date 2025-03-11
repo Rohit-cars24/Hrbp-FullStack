@@ -11,6 +11,7 @@ import {
   UserPlus, 
   Shield
 } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 const CreateUserPage = () => {
   const [formData, setFormData] = useState({
@@ -32,11 +33,20 @@ const CreateUserPage = () => {
     specialChar: false
   });
   const [activeStep, setActiveStep] = useState(0);
+  const [emailError, setEmailError] = useState('');
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
   const handleInputChange = (e) => {
     const { name, value, type, selectedOptions } = e.target;
+    if (name === 'email') {
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailPattern.test(value)) {
+        setEmailError('Invalid email format');
+      } else {
+        setEmailError('');
+      }
+    }
     if (type === 'select-multiple') {
       const values = Array.from(selectedOptions, (option) => option.value);
       setFormData((prevState) => ({
@@ -83,11 +93,23 @@ const CreateUserPage = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      alert('User created successfully!');
+      toast.success('User created successfully!');
       navigate('/hr');
+
     } catch (error) {
-      console.error('Error creating user:', error);
-      alert('Failed to create user. Please try again.');
+
+      if (error.response && error.response.data) {
+        const { statuscode, message, data } = error.response.data;
+
+        if (statuscode === 400 && data) {
+          let errorMessages = Object.values(data).join('\n');
+          toast.error(`${errorMessages}`);
+        } else {
+          toast.error(`${message}`);
+        }
+      } else {
+        toast.error('An unexpected error occurred. Please try again.');
+      }
     }
   };
 

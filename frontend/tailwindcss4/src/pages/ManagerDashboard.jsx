@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
@@ -16,7 +17,10 @@ const ManagerDashboard = () => {
   const [monthFilter, setMonthFilter] = useState("");
   const [employeeFilter, setEmployeeFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize, setPageSize] = useState(2); // Default limit is 2 in your backend
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,24 +50,6 @@ const ManagerDashboard = () => {
         if (leaveResponse.data) {
           setLeaveRequests(leaveResponse.data);
         }
-
-        const employeesResponse = await axios.get(
-          `http://localhost:8080/manager/getAllEmployees/${userId}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-  
-        if (employeesResponse.data) {
-          const formattedEmployees = employeesResponse.data.map((employee) => ({
-            id: employee[0],
-            email: employee[1],
-            name: employee[2],
-          }));
-          setTeamMembers(formattedEmployees); 
-        }
-  
-        // Add your API's here 
-
-
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -72,6 +58,55 @@ const ManagerDashboard = () => {
     fetchData();
   }, []);
   
+  // Fetch team members with pagination
+  useEffect(() => {
+    const token = localStorage.getItem("Authorization");
+    const decodedToken = jwtDecode(token);
+    const userId = decodedToken.userId;
+    
+    fetchTeamMembers(userId, token);
+  }, [currentPage, pageSize]);
+
+  const fetchTeamMembers = async (userId, token) => {
+    setLoading(true);
+    try {
+      // Use the paginated endpoint that matches your backend
+      const response = await axios.get(
+        `http://localhost:8080/manager/displayUsers/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          params: {
+            page: currentPage,
+            limit: pageSize
+          }
+        }
+      );
+      
+      console.log(response);
+
+      if (response.data) {
+        const formattedEmployees = response.data.map((employee) => ({
+          id: employee.userId,
+          email: employee.email,
+          name: employee.username,
+          position: employee.position || "Employee",
+          department: employee.department || "General"
+        }));
+        
+        setTeamMembers(formattedEmployees);
+        
+        // Set total pages based on the response
+        // If your API doesn't return total pages, you can estimate
+        // or add a total count header in your backend response
+        const totalCount = response.headers['x-total-count'] || formattedEmployees.length * 2;
+        setTotalPages(Math.ceil(totalCount / pageSize) || 1);
+      }
+    } catch (error) {
+      console.error("Error fetching team members:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getFilteredLeaveRequests = () => {
     // If leaveRequests is an object with employee names as keys
@@ -110,26 +145,30 @@ const ManagerDashboard = () => {
     return leaveRequests;
   };  
 
-  // Get filtered team members
-  const getFilteredTeamMembers = () => {
-    let filtered = [...teamMembers];
-
-    if (employeeFilter) {
-      filtered = filtered.filter(
-        (employee) => employee.id.toString() === employeeFilter
-      );
+  // Page navigation handlers
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prev => prev - 1);
     }
+  };
 
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (employee) =>
-          employee.name.toLowerCase().includes(query) ||
-          employee.email.toLowerCase().includes(query)
-      );
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prev => prev + 1);
     }
+  };
 
-    return filtered;
+  const handlePageSizeChange = (e) => {
+    setPageSize(parseInt(e.target.value));
+    setCurrentPage(1); // Reset to first page when changing page size
+  };
+
+  // Local filtering for search will need to be implemented differently
+  // since we're using server-side pagination
+  const handleSearch = () => {
+    // Reset to first page when searching
+    setCurrentPage(1);
+    // The actual search will be handled in the next data fetch
   };
 
   return (
@@ -149,20 +188,28 @@ const ManagerDashboard = () => {
           setEmployeeFilter={setEmployeeFilter}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
+          onSearch={handleSearch}
           placeholderText="Search by name, position or project..."
         />
 
         <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
-        <div className="overflow-y-auto max-h-[450px]">
-          <LeaveRequestsPanel
-            leaveRequests={getFilteredLeaveRequests()}
-          />
-        </div>
-        <div className="overflow-y-auto max-h-[450px]">
-          <EmployeeInfoPanel
-            employees={getFilteredTeamMembers()}
-          />
-        </div>
+          <div className="overflow-y-auto max-h-[450px]">
+            <LeaveRequestsPanel
+              leaveRequests={getFilteredLeaveRequests()}
+            />
+          </div>
+          <div className="overflow-y-auto max-h-[450px]">
+            <EmployeeInfoPanel
+              employees={teamMembers}
+              loading={loading}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              onPrevPage={handlePrevPage}
+              onNextPage={handleNextPage}
+              onPageSizeChange={handlePageSizeChange}
+            />
+          </div>
         </div>
       </div>
     </div>

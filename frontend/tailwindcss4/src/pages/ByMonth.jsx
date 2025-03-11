@@ -77,6 +77,21 @@ const ByMonth = () => {
     navigate(`/hr/monthly/${userid}/${monthName}-${year}`);
   };
 
+  const handleBackButton = () => {
+    const token = localStorage.getItem("Authorization");
+    const decodedToken = jwtDecode(token);
+    const userId = decodedToken.userId;  
+    const roles = decodedToken.roles; 
+
+    if (roles.includes("ROLE_HR")) {
+      navigate("/hr");
+    } else if (roles.includes("ROLE_EMPLOYEE")) {
+        navigate("/employee");
+    } else {
+        navigate("/manager");
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("Authorization");
     if (!token) {
@@ -330,7 +345,7 @@ const ByMonth = () => {
             </div>
             
             <button
-              onClick={() => navigate(-1)}
+              onClick={handleBackButton}
               className="py-2 px-4 bg-blue-300 text-white rounded-lg text-sm font-medium cursor-pointer transition-colors hover:bg-blue-600 flex items-center gap-2"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

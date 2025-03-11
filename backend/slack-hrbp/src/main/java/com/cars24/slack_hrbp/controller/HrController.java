@@ -52,6 +52,7 @@ public class HrController {
     @PreAuthorize("hasRole('HR')")
     @PutMapping("/update")
     public ResponseEntity<String> updateUser(@RequestBody EmployeeUpdateRequest employeeUpdateRequest) {
+        System.out.println(employeeUpdateRequest);
         String response = hrService.updateUser(employeeUpdateRequest);
         return ResponseEntity.ok().body(response);
     }

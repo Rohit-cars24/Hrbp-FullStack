@@ -9,6 +9,7 @@ import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
 import com.cars24.slack_hrbp.data.request.CreateEmployeeRequest;
 import com.cars24.slack_hrbp.data.response.EmployeeDisplayResponse;
 import com.cars24.slack_hrbp.data.response.UpdateEmployeeResponse;
+import com.cars24.slack_hrbp.excpetion.UserServiceException;
 import com.cars24.slack_hrbp.service.HrService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,11 +36,19 @@ public class HrServiceImpl implements HrService {
     @Override
     public String createUser(CreateEmployeeRequest createEmployeeRequest) {
         log.info("UserServiceImpl createEmployeeRequest, {}", createEmployeeRequest);
+
+        if(employeeRepository.existsByEmail(createEmployeeRequest.getEmail()))
+            throw new UserServiceException("Email already exists");
+        if(employeeRepository.existsByUserId(createEmployeeRequest.getUserId()))
+            throw new UserServiceException("UserId already exists");
         return hrDao.createUser(createEmployeeRequest);
     }
 
     @Override
     public String updateUser(EmployeeUpdateRequest employeeUpdateRequest) {
+        if(!employeeRepository.existsByUserId(employeeUpdateRequest.getManagerId()))
+            throw new UserServiceException("ManagerId does not exist");
+        System.out.println("Request reached Service for update user");
         return hrDao.updateUser(employeeUpdateRequest);
     }
     @Override
