@@ -19,14 +19,11 @@ public interface EmployeeRepository extends MongoRepository<EmployeeEntity, Stri
 
     EmployeeEntity findByUserId(String id);
 
-
-
     boolean existsByUserId(String id);
 
     void deleteByUserId(String id);
 
+    Page<EmployeeEntity> findByManagerId(String managerId, Pageable pageable);  // ✅ Keep only this
+
     Page<EmployeeEntity> findAll(Pageable pageable);
-
-    List<EmployeeEntity> findByManagerId(String id);
-
 }

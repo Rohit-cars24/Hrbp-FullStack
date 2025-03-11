@@ -1,17 +1,20 @@
 package com.cars24.slack_hrbp.controller;
 
 
+import com.cars24.slack_hrbp.data.dao.impl.ListAllEmployeesUnderManagerDaoImpl;
+import com.cars24.slack_hrbp.data.dto.UserDto;
 import com.cars24.slack_hrbp.data.request.PasswordUpdateRequest;
-import com.cars24.slack_hrbp.service.impl.EmployeeServiceImpl;
-import com.cars24.slack_hrbp.service.impl.ListAllEmployeesUnderManagerServiceImpl;
-import com.cars24.slack_hrbp.service.impl.MonthBasedServiceImpl;
-import com.cars24.slack_hrbp.service.impl.UseridAndMonthImpl;
+import com.cars24.slack_hrbp.data.response.GetUserResponse;
+import com.cars24.slack_hrbp.service.impl.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +30,8 @@ public class ManagerController {
     private final UseridAndMonthImpl useridandmonth;
     private final ListAllEmployeesUnderManagerServiceImpl listAllEmployeesUnderManager;
     private final EmployeeServiceImpl employeeService;
+    private final ListAllEmployeesUnderManagerDaoImpl listAllEmployeesUnderManagerDao;
+    private final HrServiceImpl hrService;
 
     @PreAuthorize("hasrole('MANAGER')")
     @GetMapping("bymonth")
@@ -60,8 +65,8 @@ public class ManagerController {
 
     @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/getAllEmployees/{userId}")
-    public List<List<String>> getAllEmployeesUnderManager(@PathVariable String userId){
-        List<List<String>> lis = listAllEmployeesUnderManager.getAllEmployeesUnderManager(userId);
+    public Page<List<String>> getAllEmployeesUnderManager(@PathVariable String userId){
+        Page<List<String>> lis = listAllEmployeesUnderManager.getAllEmployeesUnderManager(userId,  0, 0);
         return lis;
     }
 
@@ -72,6 +77,34 @@ public class ManagerController {
         String response = employeeService.updatePassword(passwordUpdateRequest);
         System.out.println(response);
         return ResponseEntity.ok(Collections.singletonMap("success", true));
+    }
+
+
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping("/displayUsers/{userId}")
+    public ResponseEntity<List<GetUserResponse>> getAllUsers(@PathVariable String userId,
+                                                             @RequestParam(value = "page", defaultValue = "1") int page,
+                                                             @RequestParam(value = "limit", defaultValue = "2") int limit) {
+        List<GetUserResponse> responses = new ArrayList<>();
+
+
+        // Fix: Convert to zero-based index
+        if (page > 0) page -= 1;
+
+        Page<List<String>> users = listAllEmployeesUnderManagerDao.getAllEmployeesUnderManager(userId, page, limit);
+
+        // Fix: Iterate over users.getContent()
+        for (List<String> userDto : users.getContent()) {
+            if (userDto.size() >= 3) {  // Ensure list contains required values
+                GetUserResponse res = new GetUserResponse();
+                res.setUserId(userDto.get(0));  // Manually set values
+                res.setEmail(userDto.get(1));
+                res.setUsername(userDto.get(2));
+                responses.add(res);
+            }
+        }
+
+        return ResponseEntity.ok().body(responses);
     }
 
 }
