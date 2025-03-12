@@ -57,10 +57,8 @@ public class ManagerController {
     @PreAuthorize("hasRole('MANAGER')")
     @GetMapping("/{userId}")
     public Map<String, Map<String, String>> getUserDetails(@PathVariable String userId){
-
         Map<String, Map<String, String>> resp = useridandmonth.getCustomerDetails(userId);
         return resp;
-
     }
 
     @PreAuthorize("hasRole('MANAGER')")
@@ -86,7 +84,6 @@ public class ManagerController {
                                                              @RequestParam(value = "page", defaultValue = "1") int page,
                                                              @RequestParam(value = "limit", defaultValue = "2") int limit) {
         List<GetUserResponse> responses = new ArrayList<>();
-
 
         // Fix: Convert to zero-based index
         if (page > 0) page -= 1;

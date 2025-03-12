@@ -12,7 +12,7 @@ import UnauthorizedPage from "./pages/UnauthorizedPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedRoute from "./Components/ProtectedRoute"; 
 import SearchByUserid from "./pages/SearchByUserId" 
-import EmployeeDetails from "./pages/EmployeeDetails";
+import EmployeeDetails from "./pages/EmployeeUpdate";
 import UpdatePassword from "./pages/UpdatePassword";
 import GraphView from "./pages/GraphView";
 

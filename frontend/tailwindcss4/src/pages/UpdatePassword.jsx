@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
 
 const UpdatePassword = () => {
   const [stage, setStage] = useState("verify"); // "verify" or "update"
@@ -84,11 +85,27 @@ const UpdatePassword = () => {
       console.error("Error verifying password:", error);
       setVerifying(false);
       setLoading(false);
+      toast.error("Wrong password")
       setError("Current password is incorrect");
       setPasswordShake(true);
       setTimeout(() => setPasswordShake(false), 500);
     }
   };
+
+  const handleCancelButton = () => {
+        const token = localStorage.getItem("Authorization");
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;  
+        const roles = decodedToken.roles; 
+    
+        if (roles.includes("ROLE_HR")) {
+          navigate("/hr");
+        } else if (roles.includes("ROLE_EMPLOYEE")) {
+            navigate("/employee");
+        } else {
+            navigate("/manager");
+        }
+    };
 
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
@@ -121,19 +138,18 @@ const UpdatePassword = () => {
       if (response.data.success) {
         setLoading(false);
         setSuccess(true);
+
+        toast.success("Password updated successfully");
+
+        navigate("/hr");
                 
-        // Navigate back to dashboard after success
-        // const previousRoute = localStorage.getItem("previousRoute") || "/hr";
-        // console.log(previousRoute);
-        setTimeout(() => {
-          navigate(-1);
-        }, 2000);
       } else {
         throw new Error("Failed to update password");
       }
     } catch (error) {
       console.error("Error updating password:", error);
       setLoading(false);
+      toast.error("Failed to update password. Please try again.");
       setError("Failed to update password. Please try again.");
     }
   };
@@ -170,9 +186,9 @@ const UpdatePassword = () => {
               </div>
             </div>
             
-            {error && (
+            {/* {error && (
               <div className="text-red-300 text-sm font-semibold">{error}</div>
-            )}
+            )} */}
             
             <button
               type="submit"
@@ -190,7 +206,7 @@ const UpdatePassword = () => {
               <button
                 type="button"
                 className="text-blue-300 hover:text-blue-200 text-sm"
-                onClick={() => navigate("/hr-dashboard")}
+                onClick={handleCancelButton}
               >
                 Cancel
               </button>
@@ -261,18 +277,7 @@ const UpdatePassword = () => {
               )}
             </div>
             
-            {error && (
-              <div className="text-red-300 text-sm font-semibold">{error}</div>
-            )}
             
-            {success && (
-              <div className="bg-green-500 bg-opacity-20 border border-green-300 text-green-100 p-3 rounded-lg flex items-center">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                Password updated successfully!
-              </div>
-            )}
             
             <button
               type="submit"

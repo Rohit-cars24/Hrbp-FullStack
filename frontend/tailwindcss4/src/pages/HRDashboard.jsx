@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +18,10 @@ const HRDashboard = () => {
   const [employeeFilter, setEmployeeFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [teamMembers, setTeamMembers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize, setPageSize] = useState(4);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -46,26 +51,13 @@ const HRDashboard = () => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        console.log(leaveResponse.data);
-
         // Set leave requests
         if (leaveResponse.data) {
           setLeaveRequests(leaveResponse.data);
         }
 
-        const employeesResponse = await axios.get(
-          `http://localhost:8080/hr/allUsers`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-
-        if (employeesResponse.data) {
-          const formattedEmployees = employeesResponse.data.map((employee) => ({
-            id: employee.userId,
-            email: employee.email,
-            name: employee.username,
-          }));
-          setTeamMembers(formattedEmployees);
-        }
+        // Fetch initial team members data (will be updated with pagination)
+        fetchTeamMembers(userId, token, role);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -73,6 +65,97 @@ const HRDashboard = () => {
 
     fetchData();
   }, []);
+
+  // Fetch team members with pagination
+  useEffect(() => {
+    const token = localStorage.getItem("Authorization");
+    const decodedToken = jwtDecode(token);
+    const userId = decodedToken.userId;  
+    const role = decodedToken.roles?.[0];
+    
+    fetchTeamMembers(userId, token, role);
+  }, [currentPage, pageSize, searchQuery]);
+
+  const fetchTeamMembers = async (userId, token, role) => {
+    setLoading(true);
+    try {
+      let response;
+      
+      if (role === "ROLE_MANAGER") {
+        // Use the paginated API for managers
+        response = await axios.get(
+          `http://localhost:8080/displayUsers/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: {
+              page: currentPage,
+              limit: pageSize,
+              search: searchQuery || ""
+            }
+          }
+        );
+        
+        // Extract employee data and pagination details
+        const employees = response.data;
+        const formattedEmployees = employees.map((employee) => ({
+          id: employee.userId,
+          email: employee.email,
+          name: employee.username,
+          position: employee.position || "Employee",
+          department: employee.department || "General"
+        }));
+        
+        setTeamMembers(formattedEmployees);
+        // If your API returns pagination metadata, use it to set total pages
+        // Otherwise estimate based on response size
+        setTotalPages(Math.ceil(response.headers['x-total-count'] / pageSize) || 1);
+      } else {
+        // HR role - fetch all users at once
+        response = await axios.get(
+          `http://localhost:8080/hr/allUsers`,
+          { 
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+        
+        if (response.data) {
+          const formattedEmployees = response.data.map((employee) => ({
+            id: employee.userId,
+            email: employee.email,
+            name: employee.username,
+            position: employee.position || "Employee",
+            department: employee.department || "General"
+          }));
+          
+          // For HR, implement client-side pagination and filtering
+          let filtered = formattedEmployees;
+          
+          // Apply search filter if provided
+          if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            filtered = filtered.filter(
+              (employee) =>
+                employee.name.toLowerCase().includes(query) ||
+                employee.email.toLowerCase().includes(query)
+            );
+          }
+          
+          // Calculate total pages based on filtered data
+          setTotalPages(Math.ceil(filtered.length / pageSize));
+          
+          // Paginate the filtered data client-side
+          const startIndex = (currentPage - 1) * pageSize;
+          const paginatedData = filtered.slice(startIndex, startIndex + pageSize);
+          
+          setTeamMembers(paginatedData);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching team members:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Filtering logic for leave requests
   const getFilteredLeaveRequests = () => {
@@ -122,26 +205,22 @@ const HRDashboard = () => {
     return leaveRequests;
   };
 
-  // Get filtered team members
-  const getFilteredTeamMembers = () => {
-    let filtered = [...teamMembers];
-
-    if (employeeFilter) {
-      filtered = filtered.filter(
-        (employee) => employee.id.toString() === employeeFilter
-      );
+  // Page navigation handlers
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prev => prev - 1);
     }
+  };
 
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (employee) =>
-          employee.name.toLowerCase().includes(query) ||
-          employee.email.toLowerCase().includes(query)
-      );
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prev => prev + 1);
     }
+  };
 
-    return filtered;
+  const handlePageSizeChange = (e) => {
+    setPageSize(parseInt(e.target.value));
+    setCurrentPage(1); // Reset to first page when changing page size
   };
 
   // Navigation handlers
@@ -183,7 +262,19 @@ const HRDashboard = () => {
             <LeaveRequestsPanel leaveRequests={getFilteredLeaveRequests()} />
           </div>
           <div className="overflow-y-auto max-h-[300px]">
-            <EmployeeInfoPanel employees={getFilteredTeamMembers()} />
+            <div className="bg-white rounded-lg p-4 overflow-hidden flex flex-col shadow-sm flex-1 max-h-full">
+              {/* Employee Information Panel Content */}
+              <EmployeeInfoPanel 
+                employees={teamMembers}
+                loading={loading}
+                currentPage={currentPage}
+                totalPages={totalPages}
+                pageSize={pageSize}
+                onPrevPage={handlePrevPage}
+                onNextPage={handleNextPage}
+                onPageSizeChange={handlePageSizeChange}
+              />
+            </div>
           </div>
         </div>
       </div>

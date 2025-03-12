@@ -40,11 +40,15 @@ public class HrDaoImpl implements HrDao {
 
     @Override
     public String updateUser(EmployeeUpdateRequest employeeUpdateRequest) {
+
+        EmployeeEntity entity = employeeRepository.findByUserId(employeeUpdateRequest.getManagerId());
+
         EmployeeEntity employeeEntity = employeeRepository.findByUserId(employeeUpdateRequest.getUserId());
         log.info("HrDaoImpl employeeUpdateRequest, {}", employeeUpdateRequest);
-        log.info("HrDaoImpl employeeEntity, {}", employeeEntity);
+//        log.info("HrDaoImpl employeeEntity, {}", employeeEntity);
         employeeEntity.setManagerId(employeeUpdateRequest.getManagerId());
-        employeeEntity.setManagerName(employeeUpdateRequest.getManagerName());
+        employeeEntity.setManagerName(entity.getUsername());
+        employeeEntity.setRoles(List.of(employeeUpdateRequest.getRole()));
         employeeRepository.save(employeeEntity);
         return "Update was successful";
     }

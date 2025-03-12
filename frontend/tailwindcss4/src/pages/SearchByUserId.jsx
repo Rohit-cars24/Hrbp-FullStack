@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 
 const EnhancedCalendarView = () => {
   const { userid, month: routeMonth } = useParams();
@@ -13,7 +10,6 @@ const EnhancedCalendarView = () => {
   const [currentMonth, setCurrentMonth] = useState(routeMonth || "Mar-2025"); // Default value if no route param
   const [isLoading, setIsLoading] = useState(true);
   const [employeeName, setEmployeeName] = useState("");
-  const [statusMessage, setStatusMessage] = useState("");
 
   // Function to fetch attendance data
   const fetchAttendanceData = (month) => {
@@ -615,46 +611,17 @@ const EnhancedCalendarView = () => {
   return cells;
 };
 
+
+  // Function to download attendance report
   const downloadReport = () => {
     const token = localStorage.getItem("Authorization");
-  
+
     if (!token) {
       console.error("No token found, redirecting to login.");
       navigate("/login");
       return;
     }
-  
-    // Establish SSE connection
-    const eventSource = new EventSource(`http://localhost:8080/hr/events/${userid}`);
-  
-    eventSource.onmessage = (event) => {
-      console.log("SSE Message:", event.data);
-      
-      toast.info(event.data, {
-        position: "top-right",
-        autoClose: 3000, // Auto close after 3 seconds
-      });
-    
-      // If message is "DONE", close the SSE connection
-      if (event.data === "DONE") {
-        console.log("SSE process completed. Closing connection.");
-        eventSource.close();
-      }
-    };
-    
-  
-    eventSource.onerror = (error) => {
-      if (eventSource.readyState === EventSource.CLOSED || eventSource.readyState === EventSource.CONNECTING) {
-        console.log("SSE connection closed or reconnecting.");
-        return; // Ignore normal closure or reconnection attempts
-      } else {
-        console.error("SSE Error:", error);
-      }
-      eventSource.close();
-    };
-    
-  
-    // Call backend to generate & download Excel
+
     fetch(`http://localhost:8080/hr/download/${userid}/${currentMonth}`, {
       method: "GET",
       headers: {
@@ -673,18 +640,24 @@ const EnhancedCalendarView = () => {
       })
       .catch((error) => {
         console.error("Error downloading report:", error);
-        setStatusMessage("Failed to download report.");
+        setError("Failed to download report.");
       });
-  
-    // Close SSE connection after some time
-    setTimeout(() => {
-      eventSource.close();
-    }, 10000);
   };
 
-
+  const handleBackButton = () => {
+      const token = localStorage.getItem("Authorization");
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId;  
+      const roles = decodedToken.roles; 
   
-
+      if (roles.includes("ROLE_HR")) {
+        navigate("/hr");
+      } else if (roles.includes("ROLE_EMPLOYEE")) {
+          navigate("/employee");
+      } else {
+          navigate("/manager");
+      }
+  };
 
   return (
     <div className="h-screen w-full flex flex-col bg-gray-100 overflow-hidden">
@@ -692,10 +665,19 @@ const EnhancedCalendarView = () => {
       <div className="bg-gradient-to-r from-blue-700 to-blue-500 text-white py-4 px-6 shadow-lg">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Attendance Dashboard</h1>
-          <div className="flex flex-col text-right">
+          <div className="flex flex-col text-right pl-200">
             <span className="font-medium text-lg">{employeeName}</span>
             <span className="text-blue-100 text-sm">Employee ID: {userid}</span>
           </div>
+          <button
+              onClick={handleBackButton}
+              className="py-2 px-4 bg-blue-300 text-white rounded-lg text-sm font-medium cursor-pointer transition-colors hover:bg-blue-600 flex items-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Back
+          </button>
         </div>
       </div>
 
@@ -775,31 +757,26 @@ const EnhancedCalendarView = () => {
                 View Graph
               </button>
 
-              <div className="flex flex-col items-center">
-                <button
-                  onClick={downloadReport}
-                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center shadow-sm"
+              <button
+                onClick={downloadReport}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center shadow-sm"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <svg
-                    className="w-5 h-5 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                    ></path>
-                  </svg>
-                  Export Report
-                </button>
-
-                
-              </div>
-
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  ></path>
+                </svg>
+                Export Report
+              </button>
             </div>
           </div>
 
