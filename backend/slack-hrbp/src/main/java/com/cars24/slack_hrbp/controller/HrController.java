@@ -11,21 +11,29 @@ import com.cars24.slack_hrbp.service.impl.EmployeeServiceImpl;
 import com.cars24.slack_hrbp.service.impl.HrServiceImpl;
 import com.cars24.slack_hrbp.service.impl.MonthBasedServiceImpl;
 import com.cars24.slack_hrbp.service.impl.UseridAndMonthImpl;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Slf4j
 @RestController
@@ -40,6 +48,9 @@ public class HrController {
     private final UseridAndMonthImpl useridandmonth;
     private final EmployeeServiceImpl employeeService;
     private final ListAllEmployeesUnderManagerDaoImpl listAllEmployeesUnderManagerDao;
+    private final ConcurrentHashMap<String, SseEmitter> emitters = new ConcurrentHashMap<>();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
+
 
     @PreAuthorize("hasRole('HR')")
     @PostMapping("/createUser")
@@ -115,23 +126,71 @@ public class HrController {
         System.out.println(response);
         return ResponseEntity.ok(Collections.singletonMap("success", true));
     }
+    // SSE Endpoint to listen for events
 
+    @GetMapping(value = "/events/{userid}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter streamEvents(@PathVariable String userid) {
+        SseEmitter emitter = new SseEmitter(0L); // No timeout
+        ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    @PreAuthorize("hasRole('HR')")
-    @GetMapping("/download/{userid}/{month}")
-    public ResponseEntity<byte[]> downloadAttendanceExcel(@PathVariable String userid, @PathVariable String month) {
-        try {
-            byte[] excelData = useridandmonth.generateAttendanceExcel(userid, month);
+        executor.execute(() -> {
+            try {
+                // Send "Generating Excel" message first
+                emitter.send(SseEmitter.event().data("Generating Excel..."));
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Disposition", "attachment; filename=attendance.xlsx");
+                // Simulate report generation delay (replace with actual logic)
+                Thread.sleep(5000); // Simulate processing delay
 
-            return new ResponseEntity<>(excelData, headers, HttpStatus.OK);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+                // Send "Download Ready" message
+                emitter.send(SseEmitter.event().data("Excel Downloaded successfully"));
+
+                emitter.send(SseEmitter.event().data("DONE"));
+
+                emitter.complete(); // Close connection after sending
+            } catch (IOException | InterruptedException e) {
+                emitter.completeWithError(e);
+            }
+        });
+
+        return emitter;
     }
 
+    // API to trigger Excel generation & notify frontend
+    @GetMapping("/download/{userid}/{month}")
+    public void downloadReport(@PathVariable String userid, @PathVariable String month, HttpServletResponse response) {
+        SseEmitter emitter = emitters.get(userid);
+        try {
+            // Notify frontend that generation has started
+            if (emitter != null) {
+                emitter.send(SseEmitter.event().name("status").data("Excel is being generated..."));
+            }
+
+            // Generate Excel
+            byte[] excelData = useridandmonth.generateAttendanceExcel(userid, month);
+
+            // Set response headers for file download
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition", "attachment; filename=Attendance_" + userid + "_" + month + ".xlsx");
+            response.getOutputStream().write(excelData);
+            response.flushBuffer();
+
+            // Notify frontend that download is ready
+            if (emitter != null) {
+                emitter.send(SseEmitter.event().name("status").data("Excel Downloaded Successfully!"));
+                emitter.complete();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            if (emitter != null) {
+                try {
+                    emitter.send(SseEmitter.event().name("status").data("Failed to generate Excel."));
+                    emitter.complete();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
 
     @PreAuthorize("hasRole('HR')")
     @GetMapping("/displayUsers/{userId}")
@@ -159,6 +218,7 @@ public class HrController {
 
         return ResponseEntity.ok().body(responses);
     }
+
 
 }
 
