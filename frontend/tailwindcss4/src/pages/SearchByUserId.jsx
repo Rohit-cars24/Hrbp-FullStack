@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const EnhancedCalendarView = () => {
   const { userid, month: routeMonth } = useParams();
@@ -615,13 +617,44 @@ const EnhancedCalendarView = () => {
   // Function to download attendance report
   const downloadReport = () => {
     const token = localStorage.getItem("Authorization");
-
+  
     if (!token) {
       console.error("No token found, redirecting to login.");
       navigate("/login");
       return;
     }
-
+  
+    // Establish SSE connection
+    const eventSource = new EventSource(`http://localhost:8080/hr/events/${userid}`);
+  
+    eventSource.onmessage = (event) => {
+      console.log("SSE Message:", event.data);
+      
+      toast.info(event.data, {
+        position: "top-right",
+        autoClose: 3000, // Auto close after 3 seconds
+      });
+    
+      // If message is "DONE", close the SSE connection
+      if (event.data === "DONE") {
+        console.log("SSE process completed. Closing connection.");
+        eventSource.close();
+      }
+    };
+    
+  
+    eventSource.onerror = (error) => {
+      if (eventSource.readyState === EventSource.CLOSED || eventSource.readyState === EventSource.CONNECTING) {
+        console.log("SSE connection closed or reconnecting.");
+        return; // Ignore normal closure or reconnection attempts
+      } else {
+        console.error("SSE Error:", error);
+      }
+      eventSource.close();
+    };
+    
+  
+    // Call backend to generate & download Excel
     fetch(`http://localhost:8080/hr/download/${userid}/${currentMonth}`, {
       method: "GET",
       headers: {
@@ -640,10 +673,15 @@ const EnhancedCalendarView = () => {
       })
       .catch((error) => {
         console.error("Error downloading report:", error);
-        setError("Failed to download report.");
+        setStatusMessage("Failed to download report.");
       });
+  
+    // Close SSE connection after some time
+    setTimeout(() => {
+      eventSource.close();
+    }, 10000);
   };
-
+  
   const handleBackButton = () => {
       const token = localStorage.getItem("Authorization");
       const decodedToken = jwtDecode(token);

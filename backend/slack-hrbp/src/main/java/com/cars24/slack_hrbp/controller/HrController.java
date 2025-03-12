@@ -48,7 +48,6 @@ public class HrController {
     private final UseridAndMonthImpl useridandmonth;
     private final EmployeeServiceImpl employeeService;
     private final ListAllEmployeesUnderManagerDaoImpl listAllEmployeesUnderManagerDao;
-//    private final Map<String, byte[]> reportStorage = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, SseEmitter> emitters = new ConcurrentHashMap<>();
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
@@ -127,8 +126,8 @@ public class HrController {
         System.out.println(response);
         return ResponseEntity.ok(Collections.singletonMap("success", true));
     }
-
     // SSE Endpoint to listen for events
+
     @GetMapping(value = "/events/{userid}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter streamEvents(@PathVariable String userid) {
         SseEmitter emitter = new SseEmitter(0L); // No timeout
@@ -192,7 +191,6 @@ public class HrController {
             }
         }
     }
-
 
     @PreAuthorize("hasRole('HR')")
     @GetMapping("/displayUsers/{userId}")
