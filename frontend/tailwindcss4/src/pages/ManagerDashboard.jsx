@@ -57,8 +57,33 @@ const ManagerDashboard = () => {
   
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchTotalPages = async () => {
+      try {
+        const token = localStorage.getItem("Authorization");
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;
+        
+        const response = await axios.get(
+          `http://localhost:8080/manager/displayUsers/count/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { limit: pageSize },
+          }
+        );
+
+        if (response.data) {
+          setTotalPages(response.data.totalPages);
+        }
+      } catch (error) {
+        console.error("Error fetching total pages:", error);
+      }
+    };
+
+    fetchTotalPages(); // Call when component loads or dependencies change
+  }, [pageSize]);
   
-  // Fetch team members with pagination
   useEffect(() => {
     const token = localStorage.getItem("Authorization");
     const decodedToken = jwtDecode(token);
@@ -66,6 +91,8 @@ const ManagerDashboard = () => {
     
     fetchTeamMembers(userId, token);
   }, [currentPage, pageSize]);
+
+  
 
   const fetchTeamMembers = async (userId, token) => {
     setLoading(true);
@@ -95,11 +122,6 @@ const ManagerDashboard = () => {
         
         setTeamMembers(formattedEmployees);
         
-        // Set total pages based on the response
-        // If your API doesn't return total pages, you can estimate
-        // or add a total count header in your backend response
-        const totalCount = response.headers['x-total-count'] || formattedEmployees.length * 2;
-        setTotalPages(Math.ceil(totalCount / pageSize) || 1);
       }
     } catch (error) {
       console.error("Error fetching team members:", error);

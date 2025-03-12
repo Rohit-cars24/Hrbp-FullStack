@@ -27,10 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -69,12 +66,12 @@ public class HrController {
     }
 
 
-    @PreAuthorize("asRole('HR')")
-    @GetMapping("/allUsers")
-    public ResponseEntity<List<EmployeeDisplayResponse>> displayAllUser(){
-        List<EmployeeDisplayResponse> response = hrService.getAllUsers();
-        return ResponseEntity.ok().body(response);
-    }
+//    @PreAuthorize("asRole('HR')")
+//    @GetMapping("/allUsers")
+//    public ResponseEntity<List<EmployeeDisplayResponse>> displayAllUser(){
+//        List<EmployeeDisplayResponse> response = hrService.getAllUsers();
+//        return ResponseEntity.ok().body(response);
+//    }
 
     @PreAuthorize("hasrole('HR')")
     @GetMapping("bymonth")
@@ -203,7 +200,7 @@ public class HrController {
         // Fix: Convert to zero-based index
         if (page > 0) page -= 1;
 
-        Page<List<String>> users = listAllEmployeesUnderManagerDao.getAllEmployeesUnderManager(userId, page, limit);
+        Page<List<String>> users = hrService.getAllUsers(userId, page, limit);
 
         // Fix: Iterate over users.getContent()
         for (List<String> userDto : users.getContent()) {
@@ -219,6 +216,23 @@ public class HrController {
         return ResponseEntity.ok().body(responses);
     }
 
+    @PreAuthorize("hasRole('HR')")
+    @GetMapping("/displayUsers/count/{userId}")
+    public ResponseEntity<Map<String, Object>> getTotalUserCount(@PathVariable String userId,
+                                                                 @RequestParam(value = "limit", defaultValue = "2") int limit) {
+
+        long totalEmployees = hrService.getTotalEmployeesCount();
+
+        // Calculate total pages
+        int totalPages = (int) Math.ceil((double) totalEmployees / limit);
+
+        // Create response map
+        Map<String, Object> response = new HashMap<>();
+        response.put("totalEmployees", totalEmployees);
+        response.put("totalPages", totalPages);
+
+        return ResponseEntity.ok(response);
+    }
 
 }
 

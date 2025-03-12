@@ -14,10 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/manager")
@@ -103,5 +100,24 @@ public class ManagerController {
 
         return ResponseEntity.ok().body(responses);
     }
+
+    @PreAuthorize("hasRole('MANAGER')")
+    @GetMapping("/displayUsers/count/{userId}")
+    public ResponseEntity<Map<String, Object>> getTotalUserCount(@PathVariable String userId,
+                                                                 @RequestParam(value = "limit", defaultValue = "2") int limit) {
+
+        long totalEmployees = listAllEmployeesUnderManagerDao.getTotalEmployeesCount(userId);
+
+        // Calculate total pages
+        int totalPages = (int) Math.ceil((double) totalEmployees / limit);
+
+        // Create response map
+        Map<String, Object> response = new HashMap<>();
+        response.put("totalEmployees", totalEmployees);
+        response.put("totalPages", totalPages);
+
+        return ResponseEntity.ok(response);
+    }
+
 
 }

@@ -57,28 +57,13 @@ public class HrServiceImpl implements HrService {
     }
 
     @Override
-    public List<EmployeeDisplayResponse> getAllUsers() {
-        return hrDao.getAllUsers();
+    public Page<List<String>> getAllUsers(String userId, int page, int limit) {
+        return hrDao.getAllUsers(userId,page,limit);
     }
 
-//    @Override
-//    public List<UserDto> paginatedUsers(String UserId, int page, int limit) {
-//        Pageable pageable = (Pageable) PageRequest.of(page, limit);
-//
-//        if(page > 0)
-//            page -= 1;
-//
-//        List<UserDto> users = new ArrayList<>();
-//
-//        Page<EmployeeEntity> userPage = employeeRepository.findAll(pageable);
-//        List<EmployeeEntity> response = userPage.getContent();
-//
-//        for(EmployeeEntity res : response){
-//            UserDto user = new UserDto();
-//            BeanUtils.copyProperties(res, user);
-//            users.add(user);
-//        }
-//
-//        return users;
-//    }
+    @Override
+    public long getTotalEmployeesCount(){
+        return hrDao.getTotalEmployeesCount();
+    }
+
 }
