@@ -10,11 +10,16 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -54,19 +59,21 @@ public class HrDaoImpl implements HrDao {
     }
 
     @Override
-    public List<EmployeeDisplayResponse> getAllUsers() {
+    public Page<List<String>> getAllUsers(String userId, int page, int limit) {
 
-        List<EmployeeEntity> emp = employeeRepository.findAll();
-        List<EmployeeDisplayResponse> responses = new ArrayList<>();
+        Pageable pageable = PageRequest.of(page, limit);
 
-        for(EmployeeEntity entity : emp){
-            System.out.println(entity);
-            EmployeeDisplayResponse edp = new EmployeeDisplayResponse();
-            BeanUtils.copyProperties(entity, edp);
-            responses.add(edp);
-        }
+        Page<EmployeeEntity> employeePage = employeeRepository.findAll(pageable);
 
-        return responses;
+        List<List<String>> employeeIds = employeePage.getContent().stream().map(bt -> {
+            List<String> inside = new ArrayList<>();
+            inside.add(bt.getUserId());
+            inside.add(bt.getEmail());
+            inside.add(bt.getUsername());
+            return inside;
+        }).collect(Collectors.toList());
+
+        return new PageImpl<>(employeeIds, pageable, employeePage.getTotalElements());
     }
 
     @Override
@@ -75,5 +82,10 @@ public class HrDaoImpl implements HrDao {
         EmployeeEntity employeeEntity=employeeRepository.findByUserId(userid);
 
         return employeeEntity;
+    }
+
+    @Override
+    public long getTotalEmployeesCount(){
+       return employeeRepository.count();
     }
 }

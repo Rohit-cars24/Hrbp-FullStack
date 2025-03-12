@@ -38,4 +38,9 @@ public class ListAllEmployeesUnderManagerDaoImpl{
         return new PageImpl<>(employeeIds, pageable, employeePage.getTotalElements());
     }
 
+    public long getTotalEmployeesCount(String userId) {
+        return employeeRepository.countByManagerId(userId);
+    }
+
+
 }

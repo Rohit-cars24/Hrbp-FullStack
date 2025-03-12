@@ -5,6 +5,7 @@ import com.cars24.slack_hrbp.data.request.EmployeeUpdateRequest;
 import com.cars24.slack_hrbp.data.request.CreateEmployeeRequest;
 import com.cars24.slack_hrbp.data.response.EmployeeDisplayResponse;
 import com.cars24.slack_hrbp.data.response.UpdateEmployeeResponse;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -13,7 +14,9 @@ public interface HrDao {
 
     String updateUser(EmployeeUpdateRequest employeeUpdateRequest);
 
-    List<EmployeeDisplayResponse> getAllUsers();
+    Page<List<String>> getAllUsers(String userId, int page, int limit);
 
     EmployeeEntity getUser(String userid);
+
+    public long getTotalEmployeesCount();
 }

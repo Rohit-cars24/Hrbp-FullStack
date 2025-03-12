@@ -66,89 +66,45 @@ const HRDashboard = () => {
     fetchData();
   }, []);
 
-  // Fetch team members with pagination
+
   useEffect(() => {
-    const token = localStorage.getItem("Authorization");
-    const decodedToken = jwtDecode(token);
-    const userId = decodedToken.userId;  
-    const role = decodedToken.roles?.[0];
-    
-    fetchTeamMembers(userId, token, role);
-  }, [currentPage, pageSize, searchQuery]);
+    const fetchData = async () => {
+      const token = localStorage.getItem("Authorization");
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId;  
+      const role = decodedToken.roles?.[0];
+  
+      await fetchTeamMembers(userId, token, role); // Ensure it's awaited
+    };
+  
+    fetchData();
+  }, [currentPage, pageSize]); // Dependencies include `currentPage`
+  
 
   const fetchTeamMembers = async (userId, token, role) => {
     setLoading(true);
     try {
-      let response;
-      
-      if (role === "ROLE_MANAGER") {
-        // Use the paginated API for managers
-        response = await axios.get(
-          `http://localhost:8080/displayUsers/${userId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-            params: {
-              page: currentPage,
-              limit: pageSize,
-              search: searchQuery || ""
-            }
+      const response = await axios.get(
+        `http://localhost:8080/hr/displayUsers/${userId}`,
+        { 
+          headers: { Authorization: `Bearer ${token}` },
+          params: {
+            page: currentPage,  // Ensure the correct page is requested
+            limit: pageSize
           }
-        );
-        
-        // Extract employee data and pagination details
-        const employees = response.data;
-        const formattedEmployees = employees.map((employee) => ({
+        }
+      );
+  
+      if (response.data) {
+        const formattedEmployees = response.data.map((employee) => ({
           id: employee.userId,
           email: employee.email,
           name: employee.username,
           position: employee.position || "Employee",
           department: employee.department || "General"
         }));
-        
-        setTeamMembers(formattedEmployees);
-        // If your API returns pagination metadata, use it to set total pages
-        // Otherwise estimate based on response size
-        setTotalPages(Math.ceil(response.headers['x-total-count'] / pageSize) || 1);
-      } else {
-        // HR role - fetch all users at once
-        response = await axios.get(
-          `http://localhost:8080/hr/allUsers`,
-          { 
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
-        
-        if (response.data) {
-          const formattedEmployees = response.data.map((employee) => ({
-            id: employee.userId,
-            email: employee.email,
-            name: employee.username,
-            position: employee.position || "Employee",
-            department: employee.department || "General"
-          }));
-          
-          // For HR, implement client-side pagination and filtering
-          let filtered = formattedEmployees;
-          
-          // Apply search filter if provided
-          if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            filtered = filtered.filter(
-              (employee) =>
-                employee.name.toLowerCase().includes(query) ||
-                employee.email.toLowerCase().includes(query)
-            );
-          }
-          
-          // Calculate total pages based on filtered data
-          setTotalPages(Math.ceil(filtered.length / pageSize));
-          
-          // Paginate the filtered data client-side
-          const startIndex = (currentPage - 1) * pageSize;
-          const paginatedData = filtered.slice(startIndex, startIndex + pageSize);
-          
-          setTeamMembers(paginatedData);
-        }
+  
+        setTeamMembers(formattedEmployees); 
       }
     } catch (error) {
       console.error("Error fetching team members:", error);
@@ -156,6 +112,34 @@ const HRDashboard = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchTotalPages = async () => {
+      try {
+        const token = localStorage.getItem("Authorization");
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;
+        
+        const response = await axios.get(
+          `http://localhost:8080/hr/displayUsers/count/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: { limit: pageSize },
+          }
+        );
+  
+        if (response.data) {
+          setTotalPages(response.data.totalPages);
+        }
+      } catch (error) {
+        console.error("Error fetching total pages:", error);
+      }
+    };
+  
+    fetchTotalPages();
+  }, [pageSize, currentPage]); 
+  
+  
 
   // Filtering logic for leave requests
   const getFilteredLeaveRequests = () => {
@@ -205,18 +189,17 @@ const HRDashboard = () => {
     return leaveRequests;
   };
 
-  // Page navigation handlers
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      setCurrentPage(prev => prev - 1);
+      setCurrentPage((prev) => prev - 1);
     }
   };
-
+  
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(prev => prev + 1);
+      setCurrentPage((prev) => prev + 1);
     }
-  };
+  };  
 
   const handlePageSizeChange = (e) => {
     setPageSize(parseInt(e.target.value));

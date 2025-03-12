@@ -28,4 +28,9 @@ public interface EmployeeRepository extends MongoRepository<EmployeeEntity, Stri
     Page<EmployeeEntity> findAll(Pageable pageable);
 
     boolean existsByManagerId(String managerId);
+
+    long countByManagerId(String managerId);
+
+    long count();
+
 }
